@@ -68,7 +68,7 @@ GEM
       i18n (~> 0.4)
       json
     multi_json (1.2.0)
-    mysql2 (0.3.11)
+    pg (0.18.4)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -128,10 +128,13 @@ DEPENDENCIES
   google4r-checkout!
   jquery-rails (>= 1.0.12)
   money (~> 4.0.1)
-  mysql2 (~> 0.3.0)
+  pg (~> 0.18.0)
   rails (= 3.2.2)
   sass-rails
   uglifier
   uuidtools
   will_paginate
   xml-simple (~> 1.1.1)
+
+BUNDLED WITH
+   1.14.4
