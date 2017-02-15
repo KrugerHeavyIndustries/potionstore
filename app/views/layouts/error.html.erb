@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title><%=$STORE_PREFS['store_name']%></title>
     <link rel="icon" href="/favicon.png" type="image/png"/>
-	<%= stylesheet_link_tag "store", "mytheme", :media => "all", :cache => "storeSheets" %>
+	<%= stylesheet_link_tag "store", "mytheme", :media => "all" %>
 	<%= javascript_include_tag "store" %>
 <!--[if lt IE 7]>
 <script language="JavaScript">window.attachEvent("onload", correctPNG);</script>
@@ -13,11 +13,11 @@
 <body>
 	<div id="page" class="narrow">
 		<div id="page_top">
-			<% if not $STORE_PREFS['company_logo_path'].blank? -%>
+			<% if not $STORE_PREFS['company_logo_path'].blank? %>
 			<div id="logo"><a href="<%=$STORE_PREFS['company_url']%>">
 				<img src="<%=$STORE_PREFS['company_logo_path']%>" alt="<%=$STORE_PREFS['company_name']%>"/></a>
 			</div>
-			<% end -%>
+			<% end %>
 
 			<br/>
 			<br/>
@@ -31,11 +31,11 @@
 			<br/>
 
 			<center>
-				<%= @content_for_layout %>
+				<%= yield %>
 			</center>
 		</div>
 	</div>
-	<% if is_live?() && ! $STORE_PREFS['google_analytics_account'].blank? -%>
+	<% if is_live?() && ! $STORE_PREFS['google_analytics_account'].blank? %>
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
@@ -49,6 +49,6 @@
     })();
 
   </script>
-	<% end -%>
+	<% end %>
 </body>
 </html>

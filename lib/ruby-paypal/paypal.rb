@@ -54,7 +54,7 @@ end
 # Container used for mass payment
 #
 class PayPalPayment
-  attr_accessor :email, :receiver_id, :unique_id, :note, :amount
+  attr_accessor :email, :receiver_id, :uuid, :note, :amount
 end
 
 
@@ -261,7 +261,7 @@ class PayPal
   end
 
   def self.express_checkout_redirect_url(token, useraction = nil)
-    live = ENV['RAILS_ENV'] == 'production'
+    live = Rails.env == 'production'
     if live
       url = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=#{token}"
     else
@@ -280,14 +280,14 @@ class PayPal
   # access to PayPal production servers.
   #
   def initialize()
-    environment = ENV['RAILS_ENV']
+    environment = Rails.env
     app_root = File.dirname(__FILE__) + '/../..'
     config_dir = app_root + '/config'
 
     prefs = File.expand_path(config_dir + '/paypal.yml')
     if File.exists?(prefs)
       y = YAML.load(File.open(prefs))
-      y.each {|pref, value| eval("@#{pref} =\"#{value}\"")}
+      y.each {|pref, value| eval("@#{pref} ='#{value}'")}
       y[environment].each {|pref, value| eval("@#{pref} =\"#{value}\"")}
     end
 
@@ -502,7 +502,7 @@ class PayPal
           else
             params["L_RECEIVERID#{num}"] = payments[num].receiver_id
           end
-          params["L_UNIQUEID#{num}"] = payments[num].unique_id
+          params["L_UNIQUEID#{num}"] = payments[num].uuid
           params["L_NOTE#{num}"] = payments[num].note
           params["L_AMT#{num}"] = payments[num].amount
         }

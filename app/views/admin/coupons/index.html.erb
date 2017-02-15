@@ -1,0 +1,23 @@
+<h1>Coupons</h1>
+
+<table class="list">
+  <tr>
+    <th>Code</th>
+    <th>Count</th>
+    <th>Product</th>
+    <th></th>
+  </tr>
+
+<% @coupons.each do |coupon| %>
+  <tr>
+    <td><%= coupon.attributes['code'] %></td>
+    <td><%= coupon.attributes['count'] %></td>
+    <td><%= coupon.attributes['product_code'] %></td>
+    <td><%= link_to 'Show', admin_coupon_path(coupon.attributes['code']) %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Coupon', new_admin_coupon_path %>

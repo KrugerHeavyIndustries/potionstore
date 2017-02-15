@@ -1,9 +1,3 @@
-Announcement
-------------
-
-This official branch of Potion Store is no longer supported.
-
-
 Welcome to Potion Store
 -----------------------
 
@@ -21,7 +15,7 @@ Features:
 Dependencies
 ------------
 
-- Rails 2.1 or higher.
+- Rails 3.0 or higher.
 - PostgreSQL or MySQL
 
 
@@ -31,12 +25,73 @@ Installation
 This is a brief outline of the steps required to get the development environment of Potion Store up
 and running on your local machine.
 
+- Install gems via Bundler
+  - Run ```bundle install```
+
 - Edit the following config files to suit your needs
 
   - config/store.yml
   - config/paypal.yml
   - config/google_checkout.yml
 
+- Create config/google_checkout.yml. Modify it with your credentials.
+  ```
+  # Settings for Google Checkout
+
+  # Get these by logging into Google Checkout's merchant site and the sandbox equivalent
+
+  development:
+    gcheckout_merchant_id: "XXXXXXXXXXXXXXX"
+    gcheckout_merchant_key: "XXXXXXXXXXXXXXXXXXXXXX"
+
+  test:
+    gcheckout_merchant_id: "XXXXXXXXXXXXXXX"
+    gcheckout_merchant_key: "XXXXXXXXXXXXXXXXXXXXXX"
+
+  production:
+    gcheckout_merchant_id: "XXXXXXXXXXXXXXX"
+    gcheckout_merchant_key: "XXXXXXXXXXXXXXXXXXXXXX"
+  ```
+  
+- Create config/paypal.yml. Modify it with your credentials.
+  ```
+  # PayPal API Access Setup
+  #
+  # Instructions:
+  #
+  # 1. Go to https://developer.paypal.com/.
+  # 2. Create an account if you don't have one.
+  # 3. Click the "Test Accounts" on the left sidebar.
+  # 4. Create a Business Test Account if you don't have one.
+  # 5. Select the Business Test Account and click the "Enter Sandbox Test Site" button.
+  # 6. Once you log in, click "Profile."
+  # 7. Click on "API Access."
+  # 8. Click the "Request API Credentials" link.
+  # 9. Leave the default selection on "Request API signature" and click the "Agree and Submit" button.
+  # 10. Fill in api_username and api_password and api_signature with the given information.
+
+  # Development settings
+  development:
+    pi_username: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    api_password: "XXXXXXXXXXXXXXXX"
+    api_signature: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    wiredump: true # Turn on logging of communications with PayPal during development
+
+  # Follow steps 6 to 10 but with your real PayPal account.
+  # NOTE: Your PayPal account must have Website Payments Pro already for this to work.
+
+  # Live settings
+  production:
+    api_username: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    api_password: "XXXXXXXXXXXXXXXX"
+    api_signature: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    # Don't turn this on in production mode unless you absolutely have to. It'll log people's credit card information
+    wiredump: false 
+
+  # Common setting
+  # NOTE: This file is already provided for you. You don't need to download it again.
+  ca_file: "certs/api_cert_chain.crt"
+  ```
 - Set session store secret
   Edit config/environment.rb and modify the config.action_controller.session setting
 
@@ -48,7 +103,7 @@ and running on your local machine.
   - Edit config/database.yml
   - run "rake db:migrate" to create the database schema
    
-- Run script/server and test through
+- Run ```rails s``` and test through
   <http://localhost:3000/store> and
   <http://localhost:3000/admin>
 
@@ -66,9 +121,9 @@ and running on your local machine.
 Debugging
 ---------
 
-1. gem install ruby-debug
+1. ```gem install ruby-debug```
 2. Put 'debugger' where you want to break in your source code
-3. Start the app with 'script/server --debugger' to enable breakpoints
+3. Start the app with ```rails s --debugger``` to enable breakpoints
 
   
 Final Notes

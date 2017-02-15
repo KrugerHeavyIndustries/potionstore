@@ -1,40 +1,42 @@
-ActionController::Routing::Routes.draw do |map|
-  # The priority is based upon order of creation: first created -> highest priority.
+Potionstore::Application.routes.draw do
+  match 'store' => 'store/order#new'
+  match '' => 'store/order#index'
+  
+  scope "store" do
+    match "order/payment" => "store/order#payment"
+    match "order/purchase" => "store/order#purchase"
+    match "order/thankyou" => "store/order#thankyou"
+    match "order/receipt" => "store/order#receipt"
+    match "order/purchase_paypal" => "store/order#purchase_paypal"
+    match "order/confirm_paypal" => "store/order#confirm_paypal"
+    resources :order, :singular => true, :module => "store"
+    
+    # lost license routes
+    match 'lost_license' => 'store/lost_license#index'
+    match 'lost_license/retrieve' => 'store/lost_license#retrieve'
+    match 'lost_license/sent' => 'store/lost_license#sent'
 
-  # Sample of regular route:
-  # map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
+    # google checkout
+    match 'notification/gcheckout' => 'store/notification#gcheckout'
+  end
 
-  # Sample of named route:
-  # map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
+  namespace :admin do
+    resources :products
+    resources :coupons
+    match 'coupons/:id/:operation' => 'coupons#toggle_state', :constraints => { :operation => /disable|enable/ }, :as => 'disable_coupon'
+    match 'coupons/:id/toggle_state_for_all_coupons_with_code/:operation' => 'coupons#toggle_state_for_all_coupons_with_code', :constraints => { :operation => /disable|enable/ }, :as => 'toggle_state_for_all_coupons_with_code'
+    #match 'coupons/:id/delete_all' => 'coupons#delete_all_coupons_with_code', :as => 'delete_all_coupons_with_code'
+    resources :orders do
+      member do
+        get :cancel
+        get :uncancel
+        get :refund
+        get :send_emails
+      end
+    end
+  end
 
-  # You can have the root of your site routed by hooking up ''
-  # -- just remember to delete public/index.html.
-  map.connect 'store', :controller => "store/order"
-  map.connect '', :controller => "store/order"
-
-  # Map the order controller as a resource so that it can take JSON orders from Cocoa frontend
-  # NOTE: This must come after the admin mapping
-  map.resource :order, :path_prefix => 'store', :controller => 'store/order'
-
-  # admin stuff
-  map.resources :products, :name_prefix => 'admin_', :path_prefix => 'admin', :controller => 'admin/products'
-  map.resources :orders,   :name_prefix => 'admin_', :path_prefix => 'admin', :controller => 'admin/orders', :member => {
-    :cancel => :get,
-    :uncancel => :get,
-    :refund => :get,
-    :send_emails => :get,
-  }
-
-  map.connect 'admin/charts/:action', :controller => 'admin/charts'
-
-  # Allow downloading Web Service WSDL as a file with an extension
-  # instead of a file named 'wsdl'
-  #   map.connect ':controller/service.wsdl', :action => 'wsdl'
-
-  map.connect 'bugreport/crash', :controller => 'email', :action => 'crash_report'
-
-  # Install the default route as the lowest priority.
-  map.connect ':controller/:action/:id'
+  match 'admin/charts/:action' => 'admin/charts#index'
+  match 'bugreport/crash' => 'email#crash_report'
+  match '/:controller(/:action(/:id))'
 end

@@ -1,10 +1,11 @@
-require 'uid'
+require 'uuidtools'
 require 'ruby-paypal'
 
 class Order < ActiveRecord::Base
   has_many :line_items
   belongs_to :coupon
-
+  before_create :generate_token
+  
   attr_accessor :cc_code, :cc_month, :cc_year
   attr_accessor :skip_cc_validation
   attr_accessor :email_receipt_when_finishing
@@ -26,8 +27,7 @@ class Order < ActiveRecord::Base
     if form_items.length > 0
       self.add_form_items(form_items)
     end
-
-    self.unique_id = uid() if not self.unique_id
+    
     self.order_time = Time.now() if not self.order_time
   end
 
@@ -224,10 +224,9 @@ class Order < ActiveRecord::Base
   def coupon_text=(coupon_text)
     return if !coupon_text || coupon_text.strip == ''
     coupon = Coupon.find_by_coupon(coupon_text.strip)
-    if coupon != nil &&
-        self.coupon == nil &&
+    if coupon != nil && self.coupon == nil &&
         (coupon.product_code == 'all' || has_item_with_code(coupon.product_code)) &&
-        !coupon.expired?
+        coupon.enabled? && !coupon.expired?
       self.coupon = coupon
       self.total = self.calculated_total
     end
@@ -363,7 +362,7 @@ class Order < ActiveRecord::Base
     end
 
     # Add UID if it hasn't been already
-    self.unique_id = uid() unless self.unique_id
+    self.uuid = generate_token() unless self.uuid
 
     # Always update the total before saving. Always!!!
     self.total = self.calculated_total
@@ -388,7 +387,7 @@ class Order < ActiveRecord::Base
 
     if self.email_receipt_when_finishing && !self.gcheckout?
       # Google Checkout orders get the emails delivered when the final OK notification from Google arrives
-      OrderMailer.deliver_thankyou(self) if is_live?()
+      OrderMailer.thankyou(self).deliver if is_live?()
     end
   end
 
@@ -430,16 +429,24 @@ class Order < ActiveRecord::Base
       'state' => (self.state.blank?) ? 'N/A' : self.state,
       'countrycode' => self.country,
       'zip' => self.zipcode,
-      'amt' => self.total,
-      'invnum' => self.id
+      'amt' => round_money(self.total).to_f,
+      'invnum' => self.uuid.gsub('-', '')
     }
-
+ 
     self.line_items.each_with_index do |item, i|
       params["l_number#{i}"] = item.product.code
       params["l_name#{i}"] = item.product.name
-      params["l_amt#{i}"] = item.unit_price
+      params["l_amt#{i}"] = round_money(item.unit_price).to_f
       params["l_qty#{i}"] = item.quantity
     end
+    
+    if self.coupon
+      params["l_number#{self.line_items.count}"] = self.line_items.count
+      params["l_name#{self.line_items.count}"] = self.coupon.description
+      params["l_amt#{self.line_items.count}"] = 0 - self.coupon.amount
+      params["l_qty#{self.line_items.count}"] = 1
+    end
+    
 
     res = PayPal.make_nvp_call(params)
 
@@ -457,7 +464,7 @@ class Order < ActiveRecord::Base
       'method' => 'SetExpressCheckout',
       'returnURL' => return_url,
       'cancelURL' => cancel_url,
-      'paymentrequest_0_amt' => self.total,
+      'paymentrequest_0_amt' => round_money(self.total).to_f,
       'noshipping' => 1,
       'allownote' => 0,
       'channeltype' => 'Merchant',
@@ -470,6 +477,13 @@ class Order < ActiveRecord::Base
       params["l_paymentrequest_0_amt#{i}"] = item.unit_price
       params["l_paymentrequest_0_qty#{i}"] = item.quantity
     end
+    
+    if self.coupon
+      params["l_paymentrequest_0_number#{self.line_items.count + 1}"] = self.line_items.count
+      params["l_paymentrequest_0_name#{self.line_items.count + 1}"] = self.coupon.description
+      params["l_paymentrequest_0_amt#{self.line_items.count + 1}"] = 0 - self.coupon.amount
+      params["l_paymentrequest_0_qty#{self.line_items.count + 1}"] = 1
+    end
 
     return PayPal.make_nvp_call(params)
   end
@@ -480,8 +494,8 @@ class Order < ActiveRecord::Base
       'token' => token,
       'payerID' => payer_id,
       'paymentrequest_0_paymentaction' => 'Sale',
-      'paymentrequest_0_invnum' => self.id,
-      'paymentrequest_0_amt' => self.total,
+      'paymentrequest_0_invnum' => self.uuid.gsub('-', ''),
+      'paymentrequest_0_amt' => round_money(self.total).to_f
     }
 
     self.line_items.each_with_index do |item, i|
@@ -491,6 +505,13 @@ class Order < ActiveRecord::Base
       params["l_paymentrequest_0_qty#{i}"] = item.quantity
     end
 
+    if self.coupon
+      params["l_paymentrequest_0_number#{self.line_items.count}"] = self.line_items.count
+      params["l_paymentrequest_0_name#{self.line_items.count}"] = self.coupon.description
+      params["l_paymentrequest_0_amt#{self.line_items.count}"] = 0 - self.coupon.amount
+      params["l_paymentrequest_0_qty#{self.line_items.count}"] = 1
+    end
+    
     res = PayPal.make_nvp_call(params)
 
     if res.ack == 'Success' || res.ack == 'SuccessWithWarning'
@@ -576,7 +597,7 @@ class Order < ActiveRecord::Base
     command = $GCHECKOUT_FRONTEND.create_checkout_command
     command.continue_shopping_url = $STORE_PREFS['company_url']
     command.edit_cart_url = edit_cart_url
-
+    
     for line_item in self.line_items
       command.shopping_cart.create_item do |item|
         item.name = line_item.product.name
@@ -588,19 +609,11 @@ class Order < ActiveRecord::Base
         # The order doesn't become status C until we get final notification from Google,
         # but we're still optimistically showing the buyer their license key because otherwise
         # the delay can be as much as 20 minutes on the GCheckout side
-        line_item.license_key = make_license(line_item.product.code, self.licensee_name, line_item.quantity)
-        line_item.save()
-
-        digital_content = Google4R::Checkout::DigitalContent.new
-        digital_content.key = line_item.license_key
-        digital_content.description = "#{line_item.product.name}, licensed to #{self.licensee_name}"
-        digital_content.display_disposition = 'OPTIMISTIC'
-
-        # NOTE: If you don't like the way the license key is presented on Google Checkout after
-        # the buyer completes the purchase, you can also not set the digital_content.key and
-        # format everything with digital_content.description. You can even put HTML in there.
-
-        item.digital_content = digital_content
+        item.create_digital_content do |dc| 
+          dc.display_disposition = Google4R::Checkout::Item::DigitalContent::OPTIMISTIC 
+          dc.description = "#{line_item.product.name}, licensed to #{self.licensee_name}"
+          dc.key = make_license(line_item.product.code, self.licensee_name, line_item.quantity)
+        end
       end
     end
 
@@ -617,6 +630,10 @@ class Order < ActiveRecord::Base
 
     begin
       res = command.send_to_google_checkout()
+      if self.coupon
+        self.coupon.used_count += 1
+        self.save
+      end
       return res.redirect_url
     rescue
       logger.error("An error while talking to google checkout: #{$!}")
@@ -658,4 +675,11 @@ class Order < ActiveRecord::Base
     self.status = 'R'
     self.save()
   end
+  
+  private
+    def generate_token
+      token = UUIDTools::UUID.timestamp_create.to_s
+      self.uuid = token
+      return token
+    end
 end

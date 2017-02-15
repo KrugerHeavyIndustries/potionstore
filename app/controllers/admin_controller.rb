@@ -1,8 +1,4 @@
 class AdminController < ApplicationController
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :create, :update ],
-  :redirect_to => { :action => :list }
-
   # Authentication stuff
   before_filter :redirect_to_ssl
   before_filter :check_authentication, :except => [:login]
@@ -85,6 +81,7 @@ class AdminController < ApplicationController
   end
 
   # Coupon actions
+=begin
   def generate_coupons
     if params[:form]
       form = params[:form]
@@ -102,6 +99,7 @@ class AdminController < ApplicationController
       flash[:notice] = 'Coupons generated'
     end
   end
+=end
 
 #   def add_coupons # unused
 #     if params[:form]
@@ -162,7 +160,7 @@ class AdminController < ApplicationController
 
 #         coupons = order.add_promo_coupons()
 
-#         email = OrderMailer.deliver_thankyou(order)
+#         email = OrderMailer.thankyou(order).deliver
 #       end
 #     end
 #   end

@@ -1,4 +1,3 @@
-
 class Store::OrderController < ApplicationController
   layout "store"
 
@@ -8,16 +7,12 @@ class Store::OrderController < ApplicationController
     new
     render :action => 'new'
   end
-
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :create, :update ],
-         :redirect_to => { :action => :list }
-
+  
   def new
     session[:order_id] = nil
     @qty = {}
     @payment_type = session[:payment_type]
-    @products = Product.find(:all, :conditions => {:active => 1})
+    @products = Product.where(:active => 1)
     if params[:product]
       @qty[params[:product]] = 1
     elsif session[:items]
@@ -46,8 +41,10 @@ class Store::OrderController < ApplicationController
 
     if !coupon_text.blank? && @order.coupon == nil
       coupon = Coupon.find_by_coupon(coupon_text)
-      if coupon != nil && coupon.expired?
+      if coupon != nil && coupon.expired? 
         flash[:notice] = 'Coupon Expired'
+      elsif coupon != nil && !coupon.enabled?
+        flash[:notice] = 'Invalid Coupon'
       else
         flash[:notice] = 'Invalid Coupon'
       end
@@ -142,7 +139,7 @@ class Store::OrderController < ApplicationController
   def purchase
     redirect_to :action => 'index' and return unless params[:order] && params[:items]
 
-    @order = Order.find_by_unique_id(params[:order][:unique_id])
+    @order = Order.find_by_uuid(params[:order][:uuid])
 
     if @order
       if @order.status == 'C'

@@ -7,7 +7,7 @@ class AddUidToOrders < ActiveRecord::Migration
     Order.reset_column_information
 
     Order.find(:all).each do |o|
-      o.unique_id= uid()
+      o.uuid = uid()
       o.skip_cc_validation = true
       o.save!
     end
@@ -16,6 +16,6 @@ class AddUidToOrders < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :orders, :unique_id
+    remove_column :orders, :uuid
   end
 end

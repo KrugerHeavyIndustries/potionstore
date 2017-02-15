@@ -5,28 +5,28 @@
     <title>Admin: <%= controller.action_name %></title>
     <%= stylesheet_link_tag "scaffold" %>
     <%= stylesheet_link_tag "admin" %>
-    <%= javascript_include_tag "prototype" %>
+    <%= javascript_include_tag 'application' %>
     <meta name="viewport" content="width=device-width"/>
 </head>
 <body>
-    <% if session[:logged_in] -%>
+    <% if session[:logged_in] %>
     <ul id="topmenu">
         <li><%= link_to("Reports", {:controller => "/admin", :action => "index"}, {:accesskey => "1"}) %></li>
         <li><%= link_to("Orders", {:controller => "admin/orders", :action => "index"}, {:accesskey => "2"}) %></li>
         <li><%= link_to("Add Order", {:controller => "admin/orders", :action => "new"}, {:accesskey => "3"}) %></li>
-        <li><%= link_to("Add Coupons", {:controller => "/admin", :action => "generate_coupons"}, {:accesskey => "4"}) %></li>
+        <li><%= link_to("Coupons", admin_coupons_path) %></li>
         <li><%= link_to("Products", {:controller => "admin/products", :action => "index"}, {:accesskey => "5"}) %></li>
         <li id="search">
-            <% form_tag({:controller => "admin/orders", :action => "index"}, {:method => "GET"}) do -%>
+            <%= form_tag({:controller => "admin/orders", :action => "index"}, {:method => "GET"}) do %>
             <%= text_field_tag("query", nil, {:accesskey => "S"}) %>
             <%= submit_tag "Search" %>
-            <% end -%>
+            <% end %>
         </li>
     </ul>
-    <% end -%>
+    <% end %>
     <p style="color: green"><%= flash[:notice] %></p>
     <p style="color: red"><%= flash[:error] %></p>
 
-    <%= @content_for_layout %>
+    <%= yield %>
 </body>
 </html>
