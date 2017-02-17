@@ -3,7 +3,7 @@ class Coupon < ActiveRecord::Base
 
   def initialize
     super()
-    self.coupon = random_string_of_length(16).upcase
+    self.coupon = Coupon.random_string_of_length(16).upcase
     self.used_count = 0
     self.use_limit = 1
   end
