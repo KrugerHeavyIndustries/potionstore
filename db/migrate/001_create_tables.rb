@@ -12,7 +12,7 @@ class CreateTables < ActiveRecord::Migration
       t.column "active",            :integer,                                              :default => 1,   :null => false
     end
 
-    create_table :coupons do |t|
+    create_table :admin_coupons do |t|
       t.column "code",          :string,    :limit => 16,                                :default => "",  :null => false
       t.column "description",   :string,    :limit => 64,                                :default => "",  :null => false
       t.column "coupon",        :string,    :limit => 64,                                :default => "",  :null => false
@@ -25,10 +25,10 @@ class CreateTables < ActiveRecord::Migration
       t.column "numdays",       :integer,                                                :default => 0,   :null => false
     end
 
-    add_index "coupons", ["coupon"], :name => "coupon"
+    add_index "admin_coupons", ["coupon"], :name => "coupon"
 
     create_table :orders do |t|
-      t.column "coupon_id",          :integer
+      t.column "admin_coupon_id",    :integer
       t.column "status",             :string,   :limit => 1,   :default => "P", :null => false
       t.column "email",              :string,   :limit => 128, :default => "",  :null => false
       t.column "order_time",         :datetime
@@ -50,7 +50,7 @@ class CreateTables < ActiveRecord::Migration
       t.column "transaction_number", :string,   :limit => 64
     end
 
-    add_index "orders", ["coupon_id"], :name => "coupon_id"
+    add_index "orders", ["admin_coupon_id"], :name => "admin_coupon_id"
     add_index "orders", ["email"], :name => "email"
     
     create_table :line_items do |t|
@@ -70,7 +70,7 @@ class CreateTables < ActiveRecord::Migration
 
     add_foreign_key :line_items, :orders, :dependent => :delete
     add_foreign_key :line_items, :products
-    add_foreign_key :orders, :coupons
+    add_foreign_key :orders, :admin_coupons
 
     p = Product.new
     p.code = "foo"
@@ -96,12 +96,12 @@ class CreateTables < ActiveRecord::Migration
   def self.down
     remove_foreign_key :line_items, :orders, :dependent => :delete
     remove_foreign_key :line_items, :products
-    remove_foreign_key :orders, :coupons
+    remove_foreign_key :orders, :admin_coupons
     
     drop_table :list_subscribers
     drop_table :line_items
     drop_table :orders
-    drop_table :coupons
+    drop_table :admin_coupons
     drop_table :products
   end
 end

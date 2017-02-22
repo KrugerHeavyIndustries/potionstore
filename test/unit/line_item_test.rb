@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class LineItemTest < Test::Unit::TestCase
+class LineItemTest < ActiveSupport::TestCase
   fixtures :orders
   fixtures :products
   fixtures :line_items

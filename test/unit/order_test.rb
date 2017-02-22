@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class OrderTest < Test::Unit::TestCase
-  fixtures :orders, :line_items, :products
+class OrderTest < ActiveSupport::TestCase
 
   def setup
     @order = orders(:first)

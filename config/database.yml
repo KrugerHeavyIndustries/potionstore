@@ -1,23 +1,23 @@
-production:
-  adapter: mysql2
-  encoding: utf8
-  database: store
-  username: root
-  password: 
-  timeout: 5000
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
 
 development:
-  adapter: mysql2
-  encoding: utf8
-  database: store
-  username: root
-  password: 
-  timeout: 5000
+  <<: *default
+  database: potionstore_development
+  username: potionstore
+  password: potionstore
+
+production:
+  <<: *default
+  database: potionstore
+  username: potionstore
+  password: potionstore
 
 test:
-  adapter: mysql2
-  encoding: utf8
-  database: store-test
-  username: root
-  password: 
-  timeout: 5000
+  <<: *default
+  database: potionstore_test
+  username: pstest
+  password: pstest

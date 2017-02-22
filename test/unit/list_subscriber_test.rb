@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper' 
 
-class ListSubscriberTest < Test::Unit::TestCase
+class ListSubscriberTest < ActiveSupport::TestCase
   fixtures :list_subscribers
 
   # Replace this with your real tests.

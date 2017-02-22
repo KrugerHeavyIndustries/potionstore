@@ -1,4 +1,4 @@
-<%= form_for [:admin, @coupon] do |f| %>
+<%= form_for @coupon do |f| %>
   <% if @coupon.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@coupon.errors.count, "error") %> prohibited this admin_coupon from being saved:</h2>

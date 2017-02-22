@@ -1,22 +1,12 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'admin_controller'
+require 'test_helper' 
 
-# Re-raise errors caught by the controller.
-class AdminController; def rescue_action(e) raise e end; end
-
-class AdminControllerTest < ActiveSupport::TestCase
+class AdminControllerTest < ActionController::TestCase
   fixtures :products
-
-  def setup
-    @controller = AdminController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
 
   def test_index_with_no_password
     get :index
-    assert_redirected_to 'admin/login'
-    assert_equal(session[:intended_url] , '/admin')
+    assert_redirected_to '/admin/login'
+    assert_equal(session[:intended_url] , 'http://test.host/admin')
   end
 
   def test_login_with_faulty_password

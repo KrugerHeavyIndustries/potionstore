@@ -1,8 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 first:
-  coupon_id:
+  admin_coupon_id:
   status: "C"
-  email: "test@test.com"
+  email: "test_first@test.com"
   order_time: "2007-07-01 12:00:00+08:00"
   first_name: "Princess"
   licensee_name: "Barf the Mog"
@@ -20,11 +20,13 @@ first:
   failure_code: 0
   failure_reason: ""
   transaction_number: "012123AAAAJDHHDGUTQWQOOA1"
+  uuid: 9874837
+  total: 100
 
 taxed:
-  coupon_id:
+  admin_coupon_id:
   status: "C"
-  email: "test@test.com"
+  email: "test_taxed@test.com"
   order_time: "2007-07-01 12:00:00+08:00"
   first_name: "Princess"
   licensee_name: "Barf the Mog"
@@ -42,3 +44,5 @@ taxed:
   failure_code: 0
   failure_reason: ""
   transaction_number: "012124AAAAJDHHDGUTQWQOOA1"
+  uuid: 9874838
+  total: 100

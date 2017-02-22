@@ -1,10 +1,7 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class CouponTest < Test::Unit::TestCase
-  fixtures :coupons
-
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+class CouponTest < ActiveSupport::TestCase
+  test "this is an example test" do 
+    what = admin_coupons(:one)
   end
 end

@@ -1,27 +1,18 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'admin/products_controller'
+require 'test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::ProductsController; def rescue_action(e) raise e end; end
+class Admin::ProductsControllerTest < ActionController::TestCase
 
-class AdminProductsControllerTest < ActiveSupport::TestCase
-  fixtures :products
-
-  def setup
-    @controller = Admin::ProductsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-
+  setup do
     @first_id = products(:first).id
   end
 
-  def test_should_not_allow_unauthorized_access
+  test "should not allow unauthorized access" do
     get 'index'
-    assert_redirected_to 'admin/login'
-    assert_equal(session[:intended_url] , '/admin/products')
+    assert_redirected_to '/admin/login'
+    assert_equal(session[:intended_url] , 'http://test.host/admin/products')
   end
 
-  def test_should_get_index
+  test "should get index" do
     get 'index', {}, {:logged_in => true}
     assert_response :success
     assert_template 'index'
