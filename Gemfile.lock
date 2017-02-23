@@ -8,60 +8,45 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    actionmailer (4.2.8)
-      actionpack (= 4.2.8)
-      actionview (= 4.2.8)
-      activejob (= 4.2.8)
+    actioncable (5.0.1)
+      actionpack (= 5.0.1)
+      nio4r (~> 1.2)
+      websocket-driver (~> 0.6.1)
+    actionmailer (5.0.1)
+      actionpack (= 5.0.1)
+      actionview (= 5.0.1)
+      activejob (= 5.0.1)
       mail (~> 2.5, >= 2.5.4)
-      rails-dom-testing (~> 1.0, >= 1.0.5)
-    actionpack (4.2.8)
-      actionview (= 4.2.8)
-      activesupport (= 4.2.8)
-      rack (~> 1.6)
-      rack-test (~> 0.6.2)
-      rails-dom-testing (~> 1.0, >= 1.0.5)
+      rails-dom-testing (~> 2.0)
+    actionpack (5.0.1)
+      actionview (= 5.0.1)
+      activesupport (= 5.0.1)
+      rack (~> 2.0)
+      rack-test (~> 0.6.3)
+      rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionpack-action_caching (1.2.0)
-      actionpack (>= 4.0.0, < 6)
-    actionpack-page_caching (1.1.0)
-      actionpack (>= 4.0.0, < 6)
-    actionpack-xml_parser (1.0.2)
-      actionpack (>= 4.0.0, < 5)
-    actionview (4.2.8)
-      activesupport (= 4.2.8)
+    actionview (5.0.1)
+      activesupport (= 5.0.1)
       builder (~> 3.1)
       erubis (~> 2.7.0)
-      rails-dom-testing (~> 1.0, >= 1.0.5)
-      rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    actionview-encoded_mail_to (1.0.9)
-      rails
-    activejob (4.2.8)
-      activesupport (= 4.2.8)
-      globalid (>= 0.3.0)
-    activemodel (4.2.8)
-      activesupport (= 4.2.8)
-      builder (~> 3.1)
-    activerecord (4.2.8)
-      activemodel (= 4.2.8)
-      activesupport (= 4.2.8)
-      arel (~> 6.0)
-    activerecord-session_store (1.0.0)
-      actionpack (>= 4.0, < 5.1)
-      activerecord (>= 4.0, < 5.1)
-      multi_json (~> 1.11, >= 1.11.2)
-      rack (>= 1.5.2, < 3)
-      railties (>= 4.0, < 5.1)
-    activeresource (4.1.0)
-      activemodel (~> 4.0)
-      activesupport (~> 4.0)
-      rails-observers (~> 0.1.2)
-    activesupport (4.2.8)
+      rails-dom-testing (~> 2.0)
+      rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    activejob (5.0.1)
+      activesupport (= 5.0.1)
+      globalid (>= 0.3.6)
+    activemodel (5.0.1)
+      activesupport (= 5.0.1)
+    activerecord (5.0.1)
+      activemodel (= 5.0.1)
+      activesupport (= 5.0.1)
+      arel (~> 7.0)
+    activesupport (5.0.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     ansi (1.5.0)
-    arel (6.0.4)
+    arel (7.1.4)
     builder (3.2.3)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
@@ -87,6 +72,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    method_source (0.8.2)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
@@ -100,41 +86,35 @@ GEM
     money (6.8.1)
       i18n (>= 0.6.4, <= 0.7.0)
       sixarm_ruby_unaccent (>= 1.1.1, < 2)
-    multi_json (1.12.1)
+    nio4r (1.2.1)
     nokogiri (1.7.0.1)
       mini_portile2 (~> 2.1.0)
-    pg (0.18.4)
+    pg (0.19.0)
     power_assert (1.0.1)
-    protected_attributes (1.1.3)
-      activemodel (>= 4.0.1, < 5.0)
-    rack (1.6.5)
+    rack (2.0.1)
     rack-test (0.6.3)
       rack (>= 1.0)
-    rails (4.2.8)
-      actionmailer (= 4.2.8)
-      actionpack (= 4.2.8)
-      actionview (= 4.2.8)
-      activejob (= 4.2.8)
-      activemodel (= 4.2.8)
-      activerecord (= 4.2.8)
-      activesupport (= 4.2.8)
+    rails (5.0.1)
+      actioncable (= 5.0.1)
+      actionmailer (= 5.0.1)
+      actionpack (= 5.0.1)
+      actionview (= 5.0.1)
+      activejob (= 5.0.1)
+      activemodel (= 5.0.1)
+      activerecord (= 5.0.1)
+      activesupport (= 5.0.1)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 4.2.8)
-      sprockets-rails
-    rails-deprecated_sanitizer (1.0.3)
-      activesupport (>= 4.2.0.alpha)
-    rails-dom-testing (1.0.8)
-      activesupport (>= 4.2.0.beta, < 5.0)
+      railties (= 5.0.1)
+      sprockets-rails (>= 2.0.0)
+    rails-dom-testing (2.0.2)
+      activesupport (>= 4.2.0, < 6.0)
       nokogiri (~> 1.6)
-      rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
-    rails-observers (0.1.2)
-      activemodel (~> 4.0)
-    rails-perftest (0.0.7)
-    railties (4.2.8)
-      actionpack (= 4.2.8)
-      activesupport (= 4.2.8)
+    railties (5.0.1)
+      actionpack (= 5.0.1)
+      activesupport (= 5.0.1)
+      method_source
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (12.0.0)
@@ -164,19 +144,15 @@ GEM
     uglifier (3.0.4)
       execjs (>= 0.3.0, < 3)
     uuidtools (2.1.5)
+    websocket-driver (0.6.5)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.2)
     will_paginate (3.1.5)
-    xml-simple (1.1.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack-action_caching
-  actionpack-page_caching
-  actionpack-xml_parser
-  actionview-encoded_mail_to
-  activerecord-session_store
-  activeresource
   coffee-rails
   dynamic_form
   foreigner
@@ -184,17 +160,13 @@ DEPENDENCIES
   jquery-rails
   minitest-reporters
   money
-  pg (~> 0.18.0)
-  protected_attributes
-  rails (~> 4.2.0)
-  rails-observers
-  rails-perftest
+  pg
+  rails
   sass-rails
   test-unit
   uglifier
   uuidtools
   will_paginate
-  xml-simple (~> 1.1.1)
 
 BUNDLED WITH
    1.14.4
