@@ -1,7 +1,5 @@
-# Load the rails application
+# Load the Rails application.
 require File.expand_path('../application', __FILE__)
 
-require 'digest/md5'
-
-# Initialize the rails application
+# Initialize the Rails application.
 Potionstore::Application.initialize!

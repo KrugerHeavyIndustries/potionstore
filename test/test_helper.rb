@@ -8,6 +8,8 @@ Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_opti
 
 class ActiveSupport::TestCase
 
+  set_fixture_class :coupons => Admin::Coupon
+
   fixtures :all
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
