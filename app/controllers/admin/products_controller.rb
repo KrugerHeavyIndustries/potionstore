@@ -8,7 +8,7 @@ module Admin
     # GET /products
     # GET /products.xml
     def index
-      @products = Product.find(:all)
+      @products = Product.all
 
       respond_to do |format|
         format.html # index.rhtml

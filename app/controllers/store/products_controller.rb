@@ -5,7 +5,7 @@ class Store::ProductsController < ApplicationController
   # GET /products.xml
   # GET /products.json
   def index
-    @products = Product.find(:all, :conditions => {:active => 1 })
+    @products = Product.conditions({:active => 1 })
 
     respond_to do |format|
       format.html # index.rhtml
