@@ -3,6 +3,8 @@
 
 class ApplicationController < ActionController::Base
 
+  protect_from_forgery with: :exception
+
   def check_authentication
     unless session[:logged_in]
       session[:intended_url] = request.url
