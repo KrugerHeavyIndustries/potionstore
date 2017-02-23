@@ -1,7 +1,7 @@
 class Store::OrderController < ApplicationController
   layout "store"
 
-  before_filter :redirect_to_ssl
+  before_action :redirect_to_ssl
 
   def index
     new
@@ -248,7 +248,7 @@ class Store::OrderController < ApplicationController
   end
 
   ## Methods that need a completed order
-  before_filter :check_completed_order, :only => [:thankyou, :receipt]
+  before_action :check_completed_order, :only => [:thankyou, :receipt]
 
   def thankyou
     # no need to check for nil order in the session here.

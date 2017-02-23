@@ -10,13 +10,13 @@ class AdminControllerTest < ActionController::TestCase
   end
 
   def test_login_with_faulty_password
-    post :login, {:username => 'joeblow', :password => 'totallyfakingit'}
+    post :login, params: {:username => 'joeblow', :password => 'totallyfakingit'}
     assert_template 'login'
     assert_response :success
   end
 
   def test_login_with_good_password
-    post :login, {
+    post :login, params: {
        :username => $STORE_PREFS['admin_username'],
        :password => $STORE_PREFS['admin_password']}
 
@@ -24,7 +24,7 @@ class AdminControllerTest < ActionController::TestCase
   end
 
   def generate_coupons_blank
-    process 'generate_coupons', {}, { :logged_in => true }
+    process 'generate_coupons', params: {}, session: { :logged_in => true }
     assert_response :success
     assert_template 'generate_coupons'
   end

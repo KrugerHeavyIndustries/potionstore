@@ -11,9 +11,7 @@ class Order < ActiveRecord::Base
   attr_accessor :email_receipt_when_finishing
   attr_writer :promo_coupons
 
-  attr_protected :status, :skip_cc_validation
-
-  validates_presence_of :payment_type
+  validates :payment_type, :presence => true
 
   def initialize(attributes = {}, form_items = [])
     attributes = attributes.clone()

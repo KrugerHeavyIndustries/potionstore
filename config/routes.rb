@@ -2,6 +2,8 @@ Potionstore::Application.routes.draw do
   get 'store' => 'store/order#new'
   get '' => 'store/order#index'
 
+  get 'admin' => 'admin#index'
+  patch 'admin/products' => 'admin/products#update'
   post 'admin/login' => 'admin#login'
   
   scope 'store' do
@@ -38,7 +40,6 @@ Potionstore::Application.routes.draw do
     end
   end
 
-  get 'admin/charts/:action' => 'admin/charts#index'
+  get 'admin/charts/revenue_history_days' => 'admin/charts'
   get 'bugreport/crash' => 'email#crash_report'
-  get '/:controller(/:action(/:id))'
 end

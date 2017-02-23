@@ -1,7 +1,7 @@
 module Admin
   class ProductsController < ApplicationController
     layout "admin"
-    before_filter :check_authentication
+    before_action :check_authentication
 
     #before_filter :redirect_to_ssl, :check_authentication
 
@@ -40,7 +40,7 @@ module Admin
     # POST /products
     # POST /products.xml
     def create
-      @product = Product.new(params[:product])
+      @product = Product.new(product_params)
 
       respond_to do |format|
         if @product.save
@@ -60,7 +60,7 @@ module Admin
       @product = Product.find(params[:id])
 
       respond_to do |format|
-        if @product.update_attributes(params[:product])
+        if @product.update(product_params)
           flash[:notice] = 'Product was successfully updated.'
           format.html { redirect_to admin_product_url(@product) }
           format.xml  { head :ok }
@@ -81,6 +81,12 @@ module Admin
         format.html { redirect_to admin_products_url }
         format.xml  { head :ok }
       end
+    end
+
+    private
+
+    def product_params
+      params.require(:product).permit(:code, :name, :price, :image_path, :url, :download_url, :license_url, :active)
     end
 
   end

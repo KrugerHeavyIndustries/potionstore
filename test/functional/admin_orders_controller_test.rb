@@ -17,14 +17,14 @@ class Admin::OrdersControllerTest < ActionController::TestCase
     # anybody else know how I can load data
     # into the session? jph/2006-06-24
     # It seems like the only way is through the dict in the 3rd argument of get/post/etc. AK/2006-06-26
-    get 'index', {}, {:logged_in => true}
+    get 'index', params: {}, session: {:logged_in => true}
     assert_response :success
     assert_template 'index'
     assert_not_nil assigns(:orders)
   end
 
   def test_should_show_order
-    get :show, {:id => @first_id}, {:logged_in => true}
+    get :show, params: {:id => @first_id}, session: {:logged_in => true}
 
     assert_response :success
     assert_template 'show'
@@ -34,7 +34,7 @@ class Admin::OrdersControllerTest < ActionController::TestCase
   end
 
   def test_should_get_new
-    get :new, {}, {:logged_in => true}
+    get :new, params: {}, session: {:logged_in => true}
 
     assert_response :success
     assert_template 'new'
@@ -43,7 +43,7 @@ class Admin::OrdersControllerTest < ActionController::TestCase
   end
 
   def test_should_get_edit
-    get :edit, {:id => @first_id}, {:logged_in => true}
+    get :edit, params: {:id => @first_id}, session: {:logged_in => true}
 
     assert_response :success
     assert_template 'edit'

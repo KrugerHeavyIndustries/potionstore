@@ -1,7 +1,7 @@
 module Admin
   class CouponsController < ApplicationController
     layout "admin"
-    before_filter :check_authentication
+    before_action :check_authentication
 
     def index
       @coupons = Coupon.find_by_sql("select count(*) as count, i.code, i.product_code from admin_coupons i group by i.code,i.product_code order by i.product_code,i.code")
@@ -95,7 +95,7 @@ module Admin
     def update
       @coupon = Coupon.find(params[:id])
       
-      if @coupon.update_attributes(params[:admin_coupon])
+      if @coupon.update(coupon_params)
         redirect_to admin_coupons_path, notice: 'Coupon was successfully updated.'
       else
         render action: "edit"
@@ -110,17 +110,22 @@ module Admin
     end
     
     private
-      def generate_coupon(code, product_code, description, amount, use_limit, coupon_code, expiration_date)
-        coupon = Coupon.new
-        coupon.code = code
-        coupon.product_code = product_code
-        coupon.description = description
-        coupon.amount = amount
-        coupon.use_limit = use_limit
-        coupon.coupon = coupon_code
-        coupon.creation_time = Time.now
-        coupon.expiration_date = expiration_date
-        coupon.save!
-      end
+
+    def generate_coupon(code, product_code, description, amount, use_limit, coupon_code, expiration_date)
+      coupon = Coupon.new
+      coupon.code = code
+      coupon.product_code = product_code
+      coupon.description = description
+      coupon.amount = amount
+      coupon.use_limit = use_limit
+      coupon.coupon = coupon_code
+      coupon.creation_time = Time.now
+      coupon.expiration_date = expiration_date
+      coupon.save!
+    end
+  
+    def coupon_params
+      params.require(:admin_coupon).permit(:quantity, :code, :coupon, :description, :product_code, :amount, :use_limit, :expiration_date)
+    end
   end
 end

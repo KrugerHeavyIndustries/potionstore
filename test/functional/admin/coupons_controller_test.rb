@@ -7,15 +7,13 @@ class Admin::CouponsControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    session[:logged_in] = true
-    get :index
+    get :index, session: { logged_in: true }
     assert_response :success
     assert_not_nil assigns(:coupons)
   end
 
   test "should get new" do
-    session[:logged_in] = true
-    get :new
+    get :new, session: { logged_in: true }
     assert_response :success
   end
 
@@ -23,7 +21,7 @@ class Admin::CouponsControllerTest < ActionController::TestCase
     assert_difference('Admin::Coupon.count') do
       coupon_attributes = @coupon.attributes
       coupon_attributes[:quantity] = 1
-      post :create, { admin_coupon: coupon_attributes }, { logged_in: true }
+      post :create, params: { admin_coupon: coupon_attributes }, session: { logged_in: true }
       #print_exchange "show admin_coupon"
     end
 
@@ -31,23 +29,23 @@ class Admin::CouponsControllerTest < ActionController::TestCase
   end
 
   test "should show admin_coupon" do
-    get :show, { id: @coupon.code }, { logged_in: true }
+    get :show, params: { id: @coupon.code }, session: { logged_in: true }
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, { id: @coupon }, { logged_in: true }
+    get :edit, params: { id: @coupon }, session: { logged_in: true }
     assert_response :success
   end
 
   test "should update admin_coupon" do
-    put :update, { id: @coupon, admin_coupon: @coupon.attributes }, { logged_in: true }
+    put :update, params: { id: @coupon, admin_coupon: @coupon.attributes }, session: { logged_in: true }
     assert_redirected_to admin_coupons_path
   end
 
   test "should destroy admin_coupon" do
     assert_difference('Admin::Coupon.count', -1) do
-      delete :destroy, { id: @coupon }, { logged_in: true }
+      delete :destroy, params: { id: @coupon }, session: { logged_in: true }
     end
 
     assert_redirected_to admin_coupons_path
