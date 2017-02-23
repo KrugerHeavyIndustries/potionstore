@@ -8,7 +8,7 @@ class AddTotalToOrders < ActiveRecord::Migration
 
     Order.reset_column_information
 
-    Order.find(:all).each do |o|
+    Order.all.each do |o|
       o.total = o.calculated_total
       o.skip_cc_validation = true
       o.save!

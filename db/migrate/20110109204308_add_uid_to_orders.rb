@@ -6,7 +6,7 @@ class AddUidToOrders < ActiveRecord::Migration
     add_column :orders, :unique_id, :string, :limit => 16
     Order.reset_column_information
 
-    Order.find(:all).each do |o|
+    Order.all.each do |o|
       o.uuid = uid()
       o.skip_cc_validation = true
       o.save!
