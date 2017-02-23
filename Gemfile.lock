@@ -59,8 +59,6 @@ GEM
     dynamic_form (1.1.4)
     erubis (2.7.0)
     execjs (2.7.0)
-    foreigner (1.7.4)
-      activerecord (>= 3.0.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     i18n (0.7.0)
@@ -159,7 +157,6 @@ PLATFORMS
 DEPENDENCIES
   coffee-rails
   dynamic_form
-  foreigner
   google4r-checkout!
   jquery-rails
   minitest-reporters

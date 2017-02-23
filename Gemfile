@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'rails'
-gem 'foreigner'
 gem "google4r-checkout", :git => 'https://github.com/nbudin/google4r-checkout.git'
 gem "money"
 #gem 'mysql2', '~> 0.3.0'
