@@ -40,7 +40,7 @@ class Store::OrderController < ApplicationController
     @order.coupon_text = coupon_text
 
     if !coupon_text.blank? && @order.coupon == nil
-      coupon = Coupon.find_by_coupon(coupon_text)
+      coupon = Admin::Coupon.find_by_coupon(coupon_text)
       if coupon != nil && coupon.expired? 
         flash[:notice] = 'Coupon Expired'
       elsif coupon != nil && !coupon.enabled?

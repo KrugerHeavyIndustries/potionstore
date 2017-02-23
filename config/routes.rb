@@ -1,30 +1,32 @@
 Potionstore::Application.routes.draw do
-  match 'store' => 'store/order#new'
-  match '' => 'store/order#index'
+  get 'store' => 'store/order#new'
+  get '' => 'store/order#index'
+
+  post 'admin/login' => 'admin#login'
   
-  scope "store" do
-    match "order/payment" => "store/order#payment"
-    match "order/purchase" => "store/order#purchase"
-    match "order/thankyou" => "store/order#thankyou"
-    match "order/receipt" => "store/order#receipt"
-    match "order/purchase_paypal" => "store/order#purchase_paypal"
-    match "order/confirm_paypal" => "store/order#confirm_paypal"
+  scope 'store' do
+    post 'order/payment' => "store/order#payment"
+    get 'order/purchase' => "store/order#purchase"
+    get 'order/thankyou' => "store/order#thankyou"
+    get 'order/receipt' => "store/order#receipt"
+    get 'order/purchase_paypal' => "store/order#purchase_paypal"
+    get 'order/confirm_paypal' => "store/order#confirm_paypal"
     resources :order, :singular => true, :module => "store"
     
     # lost license routes
-    match 'lost_license' => 'store/lost_license#index'
-    match 'lost_license/retrieve' => 'store/lost_license#retrieve'
-    match 'lost_license/sent' => 'store/lost_license#sent'
+    get 'lost_license' => 'store/lost_license#index'
+    post 'lost_license/retrieve' => 'store/lost_license#retrieve'
+    get 'lost_license/sent' => 'store/lost_license#sent'
 
     # google checkout
-    match 'notification/gcheckout' => 'store/notification#gcheckout'
+    get 'notification/gcheckout' => 'store/notification#gcheckout'
   end
 
   namespace :admin do
     resources :products
     resources :coupons
-    match 'coupons/:id/:operation' => 'coupons#toggle_state', :constraints => { :operation => /disable|enable/ }, :as => 'disable_coupon'
-    match 'coupons/:id/toggle_state_for_all_coupons_with_code/:operation' => 'coupons#toggle_state_for_all_coupons_with_code', :constraints => { :operation => /disable|enable/ }, :as => 'toggle_state_for_all_coupons_with_code'
+    get 'coupons/:id/:operation' => 'coupons#toggle_state', :constraints => { :operation => /disable|enable/ }, :as => 'disable_coupon'
+    get 'coupons/:id/toggle_state_for_all_coupons_with_code/:operation' => 'coupons#toggle_state_for_all_coupons_with_code', :constraints => { :operation => /disable|enable/ }, :as => 'toggle_state_for_all_coupons_with_code'
     #match 'coupons/:id/delete_all' => 'coupons#delete_all_coupons_with_code', :as => 'delete_all_coupons_with_code'
     resources :orders do
       member do
@@ -36,7 +38,7 @@ Potionstore::Application.routes.draw do
     end
   end
 
-  match 'admin/charts/:action' => 'admin/charts#index'
-  match 'bugreport/crash' => 'email#crash_report'
-  match '/:controller(/:action(/:id))'
+  get 'admin/charts/:action' => 'admin/charts#index'
+  get 'bugreport/crash' => 'email#crash_report'
+  get '/:controller(/:action(/:id))'
 end

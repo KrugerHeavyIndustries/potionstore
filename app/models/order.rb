@@ -223,7 +223,7 @@ class Order < ActiveRecord::Base
 
   def coupon_text=(coupon_text)
     return if !coupon_text || coupon_text.strip == ''
-    coupon = Coupon.find_by_coupon(coupon_text.strip)
+    coupon = Admin::Coupon.find_by_coupon(coupon_text.strip)
     if coupon != nil && self.coupon == nil &&
         (coupon.product_code == 'all' || has_item_with_code(coupon.product_code)) &&
         coupon.enabled? && !coupon.expired?

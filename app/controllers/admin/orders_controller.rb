@@ -18,7 +18,7 @@ class Admin::OrdersController < ApplicationController
                                           LOWER(licensee_name) LIKE ?)", "#{q}%", "#{q}%", "#{q}%", "%#{q}%"]
       end
     end
-    @orders = Order.paginate :page => (params[:page] || 1), :per_page => 100, :conditions => conditions, :order => 'order_time DESC'
+    @orders = Order.where(conditions).order('order_time DESC').paginate(:per_page => 100, :page => params[:page])
 
     respond_to do |format|
       format.html # index.rhtml

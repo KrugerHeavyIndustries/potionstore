@@ -261,7 +261,7 @@ class AdminController < ApplicationController
       end
 
       result = Order.connection.select_all(last_n_days_sql)
-      return (result != nil && result.length > 0 && result[0]["revenue"] != nil) ? result[0]["revenue"] : 0
+      return (result != nil && result.count > 0 && result[0]["revenue"] != nil) ? result[0]["revenue"] : 0
     end
 
     @month_estimate = 0
@@ -275,7 +275,7 @@ class AdminController < ApplicationController
     today = Date.today
     days_in_current_month = Date.civil(today.year, today.month, -1).day
 
-    if result != nil and result.length > 0
+    if result != nil and result.count > 0
       @month_estimate = last_n_days_revenue(today.day).to_f + daily_avg * (days_in_current_month - today.day)
       @year_estimate = daily_avg * 365
     end
