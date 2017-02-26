@@ -1,6 +1,6 @@
 class Admin::ChartsController < ApplicationController
 
-  #before_filter :redirect_to_ssl, :check_authentication
+  before_action :redirect_to_ssl, :check_authentication
 
   def revenue_history_days
     limit = 30
@@ -134,9 +134,9 @@ class Admin::ChartsController < ApplicationController
 
         order by last_time desc"
     else
-      "select extract(year from orders.order_time) as year,
-              extract(month from orders.order_time) as month,
-              extract(day from orders.order_time) as day,
+      "select extract(year from orders.order_time)::INTEGER as year,
+              extract(month from orders.order_time)::INTEGER as month,
+              extract(day from orders.order_time)::INTEGER as day,
               extract(day from age(date_trunc('day', orders.order_time))) as days_ago,
               sum(total) as revenue,
               max(orders.order_time) as last_time
@@ -196,9 +196,9 @@ class Admin::ChartsController < ApplicationController
 
           order by last_time desc limit #{months}"
       else
-        "select extract(year from orders.order_time) as year,
-                extract(month from orders.order_time) as month,
-                extract(month from age(date_trunc('month', orders.order_time))) as months_ago,
+        "select extract(year from orders.order_time)::INTEGER as year,
+                extract(month from orders.order_time)::INTEGER as month,
+                extract(month from age(date_trunc('month', orders.order_time)))::INTEGER as months_ago,
                 sum(total) as revenue,
                 max(orders.order_time) as last_time
 

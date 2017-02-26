@@ -15,6 +15,8 @@ gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 
+gem 'open-flash-chart', :github => 'KrugerHeavyIndustries/open-flash-chart'
+
 group :test do
   gem 'minitest-reporters'
   gem 'rails-controller-testing'

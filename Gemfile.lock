@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/KrugerHeavyIndustries/open-flash-chart.git
+  revision: d17694b44159329ece0712c2c7511c65bc19d096
+  specs:
+    open-flash-chart (2.0.0)
+      railties (~> 5.0)
+
+GIT
   remote: https://github.com/nbudin/google4r-checkout.git
   revision: dcd4cceaca54139526311483b8014e2c995d1f30
   specs:
@@ -161,6 +168,7 @@ DEPENDENCIES
   jquery-rails
   minitest-reporters
   money
+  open-flash-chart!
   pg
   rails
   rails-controller-testing
