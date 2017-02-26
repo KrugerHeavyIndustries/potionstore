@@ -64,7 +64,7 @@ class Store::OrderController < ApplicationController
       if res.ack == 'Success' || res.ack == 'SuccessWithWarning'
         # Need to copy the string. For some reason, it tries to render the payment action otherwise
         session[:paypal_token] = String.new(res.token)
-        if not @order.save()
+        if not @order.save
           flash[:notice] = 'Problem saving order'
           redirect_to :action => 'index' and return
         end
@@ -109,9 +109,9 @@ class Store::OrderController < ApplicationController
       end
     end
 
-    @order = Order.new(params[:order])
+    @order = Order.new(order_params)
 
-    if not @order.save()
+    if not @order.save
       respond_to do |format|
         format.json { render :json => @order.errors.full_messages.to_json, :status => :unprocessable_entity }
       end
@@ -162,7 +162,7 @@ class Store::OrderController < ApplicationController
 
     params[:order].keys.each { |x| params[:order][x] = params[:order][x].strip if params[:order][x] != nil }
 
-    @order = Order.new(params[:order])
+    @order = Order.new(order_params)
 
     # the order in the session is a bogus temporary one
     @order.add_form_items(params[:items])
@@ -171,10 +171,10 @@ class Store::OrderController < ApplicationController
       @order.coupon_text = params[:coupon]
     end
 
-    @order.order_time = Time.now()
+    @order.order_time = Time.now
     @order.status = 'S'
 
-    if not @order.save()
+    if not @order.save
       flash[:error] = 'Please fill out all fields'
       if @order.cc_order?
         render :action => 'payment_cc' and return
@@ -217,7 +217,7 @@ class Store::OrderController < ApplicationController
     session[:paypal_payer_id] = params['PayerID']
     @order.payment_type = 'PayPal'
 
-    if not @order.save()
+    if not @order.save
       flash[:error] = 'Problem saving order'
       render :action => 'confirm_paypal' and return
     end
@@ -234,10 +234,10 @@ class Store::OrderController < ApplicationController
     redirect_to :action => 'index' and return if session[:paypal_token] == nil
     render :action => 'failed', :layout => 'error' and return if !@order.pending?
 
-    @order.order_time = Time.now()
+    @order.order_time = Time.now
     @order.status = 'S'
 
-    if not @order.save()
+    if not @order.save
       flash[:error] = 'Please fill out all fields'
       render :action => 'confirm_paypal' and return
     end
@@ -274,6 +274,33 @@ class Store::OrderController < ApplicationController
   end
 
   private
+
+  def permitted_order_params
+    [
+      :first_name, 
+      :last_name, 
+      :company, 
+      :address1, 
+      :address2, 
+      :city, 
+      :state, 
+      :zipcode, 
+      :country, 
+      :email, 
+      :payment_type, 
+      :cc_number, 
+      :cc_month, 
+      :cc_year, 
+      :cc_code, 
+      :licensee_name, 
+      :comment
+    ]
+  end
+
+  def order_params
+    params.require(:order).permit(permitted_order_params)
+  end
+
   def finish_order(success)
     if params[:subscribe] && params[:subscribe] == 'checked'
       @order.subscribe_to_list()

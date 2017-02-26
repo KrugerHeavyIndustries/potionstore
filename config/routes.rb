@@ -4,11 +4,12 @@ Potionstore::Application.routes.draw do
 
   get 'admin' => 'admin#index'
   patch 'admin/products' => 'admin/products#update'
+  get  'admin/login' => 'admin#login'
   post 'admin/login' => 'admin#login'
   
   scope 'store' do
     post 'order/payment' => "store/order#payment"
-    get 'order/purchase' => "store/order#purchase"
+    post 'order/purchase' => "store/order#purchase"
     get 'order/thankyou' => "store/order#thankyou"
     get 'order/receipt' => "store/order#receipt"
     get 'order/purchase_paypal' => "store/order#purchase_paypal"

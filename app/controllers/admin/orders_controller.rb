@@ -82,7 +82,7 @@ class Admin::OrdersController < ApplicationController
     end
 
     respond_to do |format|
-      if @order.update_attributes(params[:order])
+      if @order.update_attributes(order_params)
         flash[:notice] = 'Order was successfully updated.'
         format.html { redirect_to admin_order_url(@order) }
         format.xml  { head :ok }
@@ -158,5 +158,10 @@ class Admin::OrdersController < ApplicationController
       logger.error("ERROR -- Problem saving order: #{e}")
       return false
     end
+  end
+
+  private
+  def order_params
+    params.require(:order).permit(:licensee_name, :email, :company)
   end
 end
