@@ -18,7 +18,6 @@ Features:
 
 - PayPal Website Payments Pro support
 - PayPal Express Checkout support
-- Google Checkout support
 - Administration interface with some simple sales charts
 - Coupons
 - Send lost license page (http://mycompany.com/store/lost_license)
@@ -45,27 +44,7 @@ and running on your local machine.
 
   - config/store.yml
   - config/paypal.yml
-  - config/google_checkout.yml
 
-- Create config/google_checkout.yml. Modify it with your credentials.
-  ```
-  # Settings for Google Checkout
-
-  # Get these by logging into Google Checkout's merchant site and the sandbox equivalent
-
-  development:
-    gcheckout_merchant_id: "XXXXXXXXXXXXXXX"
-    gcheckout_merchant_key: "XXXXXXXXXXXXXXXXXXXXXX"
-
-  test:
-    gcheckout_merchant_id: "XXXXXXXXXXXXXXX"
-    gcheckout_merchant_key: "XXXXXXXXXXXXXXXXXXXXXX"
-
-  production:
-    gcheckout_merchant_id: "XXXXXXXXXXXXXXX"
-    gcheckout_merchant_key: "XXXXXXXXXXXXXXXXXXXXXX"
-  ```
-  
 - Create config/paypal.yml. Modify it with your credentials.
   ```
   # PayPal API Access Setup
@@ -121,15 +100,6 @@ and running on your local machine.
   <http://localhost:3000/admin>
 
 - Replace the default license key generator in lib/licensekey.rb with your own
-
-- If you are setting up Google Checkout, log into your Google Checkout account (sandbox or live), go
-  to Settings->Integration and put in your URL that corresponds to the following:
-
-  https://secure.potionfactory.com/store/notification/gcheckout
-
-  That is the URL that Google uses to make callbacks. If you don't set this up, your customers will
-  not get their orders delivered by email.
-
 
 Debugging
 ---------

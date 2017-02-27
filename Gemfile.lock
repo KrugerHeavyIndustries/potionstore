@@ -5,13 +5,6 @@ GIT
     open-flash-chart (2.0.0)
       railties (~> 5.0)
 
-GIT
-  remote: https://github.com/nbudin/google4r-checkout.git
-  revision: dcd4cceaca54139526311483b8014e2c995d1f30
-  specs:
-    google4r-checkout (1.2.0)
-      money (>= 2.3.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -165,7 +158,6 @@ PLATFORMS
 DEPENDENCIES
   coffee-rails
   dynamic_form
-  google4r-checkout!
   jquery-rails
   jquery-validation-rails
   minitest-reporters

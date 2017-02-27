@@ -20,9 +20,6 @@ Potionstore::Application.routes.draw do
     get 'lost_license' => 'store/lost_license#index'
     post 'lost_license/retrieve' => 'store/lost_license#retrieve'
     get 'lost_license/sent' => 'store/lost_license#sent'
-
-    # google checkout
-    get 'notification/gcheckout' => 'store/notification#gcheckout'
   end
 
   namespace :admin do
