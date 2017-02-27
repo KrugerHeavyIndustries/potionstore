@@ -28,7 +28,9 @@ $(document).ready(function(){
 			<a href="<%=product.url %>">
 				<% if not product.image_path.blank? %>
 				<img src="<%= product.image_path %>" alt="">
-				<% end %>
+				<% else %>
+        <%= image_tag "store/application_icon.png" %>
+        <% end %>
 				<%= product.name %>
 			</a>
 		</td>
