@@ -174,10 +174,6 @@ class Order < ActiveRecord::Base
     return self.payment_type != nil && self.payment_type.downcase == 'paypal'
   end
 
-  def gcheckout?
-    return self.payment_type != nil && self.payment_type.downcase == 'google checkout'
-  end
-
   def pending?
     return self.status == 'P'
   end
@@ -381,10 +377,9 @@ class Order < ActiveRecord::Base
       end
     end
 
-    self.save()
+    self.save
 
-    if self.email_receipt_when_finishing && !self.gcheckout?
-      # Google Checkout orders get the emails delivered when the final OK notification from Google arrives
+    if self.email_receipt_when_finishing
       OrderMailer.thankyou(self).deliver if is_live?()
     end
   end
@@ -394,8 +389,6 @@ class Order < ActiveRecord::Base
 
     if cc_order? or paypal_order?
       self.paypal_refund_order()
-    else
-      self.gcheckout_refund_order()
     end
   end
 
@@ -590,90 +583,6 @@ class Order < ActiveRecord::Base
     end
   end
 
-  # Google Checkout related methods
-  def gcheckout_send_order(edit_cart_url = nil)
-    command = $GCHECKOUT_FRONTEND.create_checkout_command
-    command.continue_shopping_url = $STORE_PREFS['company_url']
-    command.edit_cart_url = edit_cart_url
-    
-    for line_item in self.line_items
-      command.shopping_cart.create_item do |item|
-        item.name = line_item.product.name
-        item.description = ""
-        item.unit_price = Money.new(line_item.unit_price * 100)
-        item.quantity = line_item.quantity
-
-        # Force a license key generation here even though the order status is still P.
-        # The order doesn't become status C until we get final notification from Google,
-        # but we're still optimistically showing the buyer their license key because otherwise
-        # the delay can be as much as 20 minutes on the GCheckout side
-        item.create_digital_content do |dc| 
-          dc.display_disposition = Google4R::Checkout::Item::DigitalContent::OPTIMISTIC 
-          dc.description = "#{line_item.product.name}, licensed to #{self.licensee_name}"
-          dc.key = make_license(line_item.product.code, self.licensee_name, line_item.quantity)
-        end
-      end
-    end
-
-    if self.coupon
-      command.shopping_cart.create_item do |item|
-        item.name = "Coupon"
-        item.description = coupon.description
-        item.unit_price = Money.new(-coupon_amount() * 100)
-        item.quantity = 1
-      end
-    end
-
-    command.shopping_cart.private_data = { 'order-id' => [self.id] }
-
-    begin
-      res = command.send_to_google_checkout()
-      if self.coupon
-        self.coupon.used_count += 1
-        self.save
-      end
-      return res.redirect_url
-    rescue
-      logger.error("An error while talking to google checkout: #{$!}")
-      return nil
-    end
-  end
-
-  def gcheckout_add_merchant_order_number
-    command = $GCHECKOUT_FRONTEND.create_add_merchant_order_number_command
-    command.google_order_number = self.transaction_number
-    command.merchant_order_number = self.id
-    command.send_to_google_checkout() rescue nil
-  end
-
-  def gcheckout_deliver_order
-    command = $GCHECKOUT_FRONTEND.create_deliver_order_command
-    command.google_order_number = self.transaction_number
-    command.send_email = false
-    command.send_to_google_checkout() rescue nil
-  end
-
-  def gcheckout_archive_order
-    command = $GCHECKOUT_FRONTEND.create_archive_order_command
-    command.google_order_number = self.transaction_number
-    command.send_to_google_checkout() rescue nil
-  end
-
-  def gcheckout_refund_order
-    command = $GCHECKOUT_FRONTEND.create_refund_order_command
-    command.google_order_number = self.transaction_number
-    command.reason = 'Refund requested by customer'
-    command.send_to_google_checkout() rescue nil
-
-    command = $GCHECKOUT_FRONTEND.create_cancel_order_command
-    command.google_order_number = self.transaction_number
-    command.reason = 'Refund requested by customer'
-    command.send_to_google_checkout() rescue nil
-
-    self.status = 'R'
-    self.save()
-  end
-  
   private
     def generate_token
       token = UUIDTools::UUID.timestamp_create.to_s

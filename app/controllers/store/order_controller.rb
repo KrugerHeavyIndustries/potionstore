@@ -74,9 +74,6 @@ class Store::OrderController < ApplicationController
         flash[:notice] = 'Could not connect to PayPal'
         redirect_to :action => 'index'
       end
-    elsif params[:payment_type] == 'gcheckout'
-      # Handle Google Checkout orders
-      render :action => 'payment_gcheckout'
     else
       # credit card order
       # put in a dummy credit card number for testing
@@ -179,7 +176,7 @@ class Store::OrderController < ApplicationController
       if @order.cc_order?
         render :action => 'payment_cc' and return
       else
-        render :action => 'payment_gcheckout' and return
+        render :action => 'failed', :layout => 'error' and return
       end
     end
 
@@ -192,13 +189,7 @@ class Store::OrderController < ApplicationController
       success = @order.paypal_direct_payment(request)
       finish_order(success)
     else
-      # Google Checkout order
-      redirect_url = @order.gcheckout_send_order(url_for(:action => 'index'))
-      if redirect_url == nil
-        @order.failure_reason = 'Could not connect to Google Checkout'
-        render :action => 'failed', :layout => 'error' and return
-      end
-      redirect_to redirect_url and return
+      render :action => 'failed', :layout => 'error' and return
     end
   end
 

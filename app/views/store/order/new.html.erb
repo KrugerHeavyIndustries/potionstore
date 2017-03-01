@@ -7,9 +7,6 @@ $(document).ready(function(){
 //	update_prices();
 	$('.creditcards img').click(function() { $('#creditcard').get(0).checked = 'checked'; });
 	$('.paypal img').click(function() { $('#paypal').get(0).checked = 'checked'; });
-<% if $STORE_PREFS['allow_google_checkout'] then %>
-	$('.gcheckout img').click(function() { $('#gcheckout').get(0).checked = 'checked'; });
-<% end %>
 //	$('#items_3').keyup(update_prices);
 //	$('#items_3').change(update_prices);
 });
@@ -50,7 +47,7 @@ $(document).ready(function(){
 		<td><b>Payment Method:</b></td>
 		<td>
 			<p class="creditcards">
-				<%= radio_button_tag 'payment_type', 'cc', !(['paypal', 'gcheckout'].member? @payment_type), :id => 'creditcard' %>
+				<%= radio_button_tag 'payment_type', 'cc', !(['paypal'].member? @payment_type), :id => 'creditcard' %>
 				<%= image_tag "store/visa.gif", :alt => "Visa" %>
 				<%= image_tag "store/mc.gif", :alt => "MasterCard" %>
 				<%= image_tag "store/amex.gif", :alt => "Amex" %>
@@ -61,12 +58,6 @@ $(document).ready(function(){
 				<%= image_tag "store/paypal.gif", :alt => "Paypal" %>
 				Shop without sharing your financial information
 			</p>
-			<% if $STORE_PREFS['allow_google_checkout'] then %>
-			<p class="gcheckout">
-				<%= radio_button_tag 'payment_type', 'gcheckout', @payment_type == 'gcheckout', :id => 'gcheckout' %>
-				<%= image_tag "store/gcheckout.gif", :alt => "Google Checkout" %>
-			</p>
-			<% end %>
 		</td>
     </tr>
     <tr>
