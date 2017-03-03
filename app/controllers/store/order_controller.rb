@@ -61,15 +61,14 @@ class Store::OrderController < ApplicationController
       # Handle Paypal orders
       res = @order.paypal_set_express_checkout(url_for(:action => 'confirm_paypal'), url_for(:action => 'index'))
 
-      if res.ack == 'Success' || res.ack == 'SuccessWithWarning'
+      if true 
         # Need to copy the string. For some reason, it tries to render the payment action otherwise
-        session[:paypal_token] = String.new(res.token)
         if not @order.save
           flash[:notice] = 'Problem saving order'
           redirect_to :action => 'index' and return
         end
         session[:order_id] = @order.id
-        redirect_to PayPal.express_checkout_redirect_url(res.token)
+        redirect_to :action => 'confirm_paypal'
       else
         flash[:notice] = 'Could not connect to PayPal'
         redirect_to :action => 'index'
@@ -199,13 +198,6 @@ class Store::OrderController < ApplicationController
     @order = Order.find(session[:order_id])
     redirect_to :action => 'index' and return if @order == nil || session[:paypal_token] != params[:token]
 
-    # Suck the info from PayPal
-    if not @order.update_from_paypal_express_checkout_details(session[:paypal_token])
-      flash[:notice] = 'Could not retrieve order information from PayPal'
-      redirect_to :action => 'index' and return
-    end
-
-    session[:paypal_payer_id] = params['PayerID']
     @order.payment_type = 'PayPal'
 
     if not @order.save
@@ -217,6 +209,7 @@ class Store::OrderController < ApplicationController
   end
 
   def purchase_paypal
+    byebug
     render :action => 'no_order', :layout => 'error' and return if session[:order_id] == nil
 
     @order = Order.find(session[:order_id])

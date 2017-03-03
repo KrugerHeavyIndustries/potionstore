@@ -1,5 +1,4 @@
 require 'uuidtools'
-require 'ruby-paypal'
 
 class Order < ActiveRecord::Base
   has_many :line_items
@@ -26,7 +25,7 @@ class Order < ActiveRecord::Base
       self.add_form_items(form_items)
     end
     
-    self.order_time = Time.now() if not self.order_time
+    self.order_time = Time.now if not self.order_time
   end
 
   def validate
@@ -117,7 +116,7 @@ class Order < ActiveRecord::Base
 
   def licensee_name=(new_name)
     regenerate_keys = (self.licensee_name != new_name) && (self.submitting? or self.complete?)
-    write_attribute(:licensee_name, new_name.strip())
+    write_attribute(:licensee_name, new_name.strip)
     if regenerate_keys
       for item in self.line_items
         item.license_key = make_license(item.product.code, new_name, item.quantity)
@@ -126,11 +125,11 @@ class Order < ActiveRecord::Base
   end
 
   def first_name=(value)
-    write_attribute(:first_name, value.strip())
+    write_attribute(:first_name, value.strip)
   end
 
   def last_name=(value)
-    write_attribute(:last_name, value.strip())
+    write_attribute(:last_name, value.strip)
   end
 
   def name
@@ -451,32 +450,32 @@ class Order < ActiveRecord::Base
   end
 
   def paypal_set_express_checkout(return_url, cancel_url)
-    params = {
-      'method' => 'SetExpressCheckout',
-      'returnURL' => return_url,
-      'cancelURL' => cancel_url,
-      'paymentrequest_0_amt' => round_money(self.total).to_f,
-      'noshipping' => 1,
-      'allownote' => 0,
-      'channeltype' => 'Merchant',
-      'hdrimg' => $STORE_PREFS['paypal_express_checkout_header_image']
-    }
-
-    self.line_items.each_with_index do |item, i|
-      params["l_paymentrequest_0_number#{i}"] = item.product.code
-      params["l_paymentrequest_0_name#{i}"] = item.product.name
-      params["l_paymentrequest_0_amt#{i}"] = item.unit_price
-      params["l_paymentrequest_0_qty#{i}"] = item.quantity
-    end
-    
-    if self.coupon
-      params["l_paymentrequest_0_number#{self.line_items.count + 1}"] = self.line_items.count
-      params["l_paymentrequest_0_name#{self.line_items.count + 1}"] = self.coupon.description
-      params["l_paymentrequest_0_amt#{self.line_items.count + 1}"] = 0 - self.coupon.amount
-      params["l_paymentrequest_0_qty#{self.line_items.count + 1}"] = 1
-    end
-
-    return PayPal.make_nvp_call(params)
+#    params = {
+#      'method' => 'SetExpressCheckout',
+#      'returnURL' => return_url,
+#      'cancelURL' => cancel_url,
+#      'paymentrequest_0_amt' => round_money(self.total).to_f,
+#      'noshipping' => 1,
+#      'allownote' => 0,
+#      'channeltype' => 'Merchant',
+#      'hdrimg' => $STORE_PREFS['paypal_express_checkout_header_image']
+#    }
+#
+#    self.line_items.each_with_index do |item, i|
+#      params["l_paymentrequest_0_number#{i}"] = item.product.code
+#      params["l_paymentrequest_0_name#{i}"] = item.product.name
+#      params["l_paymentrequest_0_amt#{i}"] = item.unit_price
+#      params["l_paymentrequest_0_qty#{i}"] = item.quantity
+#    end
+#    
+#    if self.coupon
+#      params["l_paymentrequest_0_number#{self.line_items.count + 1}"] = self.line_items.count
+#      params["l_paymentrequest_0_name#{self.line_items.count + 1}"] = self.coupon.description
+#      params["l_paymentrequest_0_amt#{self.line_items.count + 1}"] = 0 - self.coupon.amount
+#      params["l_paymentrequest_0_qty#{self.line_items.count + 1}"] = 1
+#    end
+#
+#    return PayPal.make_nvp_call(params)
   end
 
   def paypal_express_checkout_payment(token, payer_id)

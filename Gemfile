@@ -18,6 +18,10 @@ gem 'open-flash-chart', :github => 'KrugerHeavyIndustries/open-flash-chart'
 
 gem 'jquery-validation-rails'
 
+gem 'paypal-sdk-rest'
+
+gem 'byebug'
+
 group :test do
   gem 'minitest-reporters'
   gem 'rails-controller-testing'

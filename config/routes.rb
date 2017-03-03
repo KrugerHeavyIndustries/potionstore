@@ -15,6 +15,9 @@ Potionstore::Application.routes.draw do
     get 'order/purchase_paypal' => "store/order#purchase_paypal"
     get 'order/confirm_paypal' => "store/order#confirm_paypal"
     resources :order, :singular => true, :module => "store"
+
+    post 'paypal/create' => 'store/paypal#create'
+    post 'paypal/execute' => 'store/paypal#execute'
     
     # lost license routes
     get 'lost_license' => 'store/lost_license#index'

@@ -1,22 +1,31 @@
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+  paypal.Button.render({
+    env: 'sandbox',
+    payment: function(resolve, reject) {
+      var CREATE_PAYMENT_URL = 'http://localhost:3000/store/paypal/create';
+      paypal.request.post(CREATE_PAYMENT_URL)
+            .then(function(data) { resolve(data.paymentID); })
+            .catch(function(error) { reject(error); });
+    },
+    onAuthorize: function(data, actions) { 
+      var EXECUTE_PAYMENT_URL = 'http://localhost:3000/store/paypal/execute'
+      paypal.request.post(EXECUTE_PAYMENT_URL, {
+        paymentID: data.paymentID, payerID: data.payerID })
+          .then(function(data) { return actions.redirect(); })
+          .catch(function(error) { /* go to an error page */ });
+    },
+    onCancel: function(data, actions) { 
+      return actions.redirect();
+    }
+  }, '#paypal-button');
+
+</script>
 <script type="text/javascript">
-
-function validate() {
-	setup_help_values();
-	$('#submit').get(0).disabled = true;
-	return true;
-}
-
-function reset() {
-	$('#submit').get(0).disabled = false;
-	setup_help_values();
-}
 
 var HELP_VALUES = new Array();
 HELP_VALUES['#order_company'] = 'optional';
 HELP_VALUES['#order_comment'] = 'optional';
-
-onload = reset;
-onunload = reset;
 
 $(document).ready(function(){
 	$('#order_company').focus( function() { setup_help_value('#order_company'); });
@@ -101,6 +110,6 @@ $(document).ready(function(){
         Keep me updated with <%=$STORE_PREFS['company_name']%> news.</label></p>
 </div>
 
-<p><input id="submit" name="commit" type="submit" value="&nbsp; Place Order &rarr;" /></p>
+<p><div id="paypal-button"></div></p>
 
 <% end %>
