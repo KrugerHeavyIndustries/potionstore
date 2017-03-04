@@ -12,7 +12,6 @@ Potionstore::Application.routes.draw do
     post 'order/purchase' => "store/order#purchase"
     get 'order/thankyou' => "store/order#thankyou"
     get 'order/receipt' => "store/order#receipt"
-    get 'order/purchase_paypal' => "store/order#purchase_paypal"
     get 'order/confirm_paypal' => "store/order#confirm_paypal"
     resources :order, :singular => true, :module => "store"
 

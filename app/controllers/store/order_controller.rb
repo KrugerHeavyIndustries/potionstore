@@ -58,21 +58,12 @@ class Store::OrderController < ApplicationController
     end
 
     if params[:payment_type] == 'paypal'
-      # Handle Paypal orders
-      res = @order.paypal_set_express_checkout(url_for(:action => 'confirm_paypal'), url_for(:action => 'index'))
-
-      if true 
-        # Need to copy the string. For some reason, it tries to render the payment action otherwise
-        if not @order.save
-          flash[:notice] = 'Problem saving order'
-          redirect_to :action => 'index' and return
-        end
-        session[:order_id] = @order.id
-        redirect_to :action => 'confirm_paypal'
-      else
-        flash[:notice] = 'Could not connect to PayPal'
-        redirect_to :action => 'index'
+      if not @order.save
+        flash[:notice] = 'Problem saving order'
+        redirect_to :action => 'index' and return
       end
+      session[:order_id] = @order.id
+      redirect_to :action => 'confirm_paypal'
     else
       # credit card order
       # put in a dummy credit card number for testing
@@ -206,29 +197,6 @@ class Store::OrderController < ApplicationController
     end
 
     session[:order_id] = @order.id
-  end
-
-  def purchase_paypal
-    byebug
-    render :action => 'no_order', :layout => 'error' and return if session[:order_id] == nil
-
-    @order = Order.find(session[:order_id])
-    @order.attributes = params[:order]
-
-    redirect_to :action => 'index' and return if session[:paypal_token] == nil
-    render :action => 'failed', :layout => 'error' and return if !@order.pending?
-
-    @order.order_time = Time.now
-    @order.status = 'S'
-
-    if not @order.save
-      flash[:error] = 'Please fill out all fields'
-      render :action => 'confirm_paypal' and return
-    end
-
-    success = @order.paypal_express_checkout_payment(session[:paypal_token], session[:paypal_payer_id])
-
-    finish_order(success)
   end
 
   ## Methods that need a completed order
