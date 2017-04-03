@@ -1,15 +1,15 @@
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 <script>
   paypal.Button.render({
-    env: 'sandbox',
+    env: <%= raw paypal_js_env %>,
     payment: function(resolve, reject) {
-      var CREATE_PAYMENT_URL = 'http://localhost:3000/store/paypal/create';
+      var CREATE_PAYMENT_URL = <%= raw paypal_js_create_payment_url %>;
       paypal.request.post(CREATE_PAYMENT_URL)
             .then(function(data) { resolve(data.paymentID); })
             .catch(function(error) { reject(error); });
     },
     onAuthorize: function(data, actions) { 
-      var EXECUTE_PAYMENT_URL = 'http://localhost:3000/store/paypal/execute'
+      var EXECUTE_PAYMENT_URL = <%= raw paypal_js_execute_payment_url %>;
       paypal.request.post(EXECUTE_PAYMENT_URL, {
         paymentID: data.paymentID, payerID: data.payerID })
           .then(function(data) { return actions.redirect(); })

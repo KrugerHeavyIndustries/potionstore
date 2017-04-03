@@ -1,6 +1,6 @@
 Potionstore::Application.routes.draw do
+  root to: 'store/order#index'
   get 'store' => 'store/order#new'
-  get '' => 'store/order#index'
 
   get 'admin' => 'admin#index'
   patch 'admin/products' => 'admin/products#update'

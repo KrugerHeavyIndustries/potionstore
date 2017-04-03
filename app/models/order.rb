@@ -154,15 +154,7 @@ class Order < ActiveRecord::Base
   end
 
   def payment_type=(type)
-    val = type
-    if type
-      if ['visa', 'amex', 'discover'].member?(type.downcase())
-        val = type.capitalize()
-      elsif type.downcase() == 'mastercard'
-        val = 'MasterCard'
-      end
-    end
-    write_attribute(:payment_type, val)
+    write_attribute(:payment_type, type.downcase)
   end
 
   def cc_order?
@@ -393,58 +385,64 @@ class Order < ActiveRecord::Base
 
   # PayPal related methods
   def paypal_direct_payment(request)
-    # The following is needed because MediaTemple puts in two ip addresses in REMOTE_ADDR for some reason
-    ip_address = request.env['REMOTE_ADDR']
-    ip_address = ip_address.split(',')[0] if ip_address.count(",") != 0
-    ip_address = "127.0.0.1" if ip_address == "::1"
 
-    cc_month = self.cc_month.to_s
-    cc_month = '0' + cc_month if cc_month.length == 1
-
-    cc_year = self.cc_year.to_s
-    cc_year = '20' + cc_year if cc_year.length == 2
-
-    params = {
-      'method' => 'DoDirectPayment',
-      'ipaddress' => ip_address,
-      'creditcardtype' => self.payment_type,
-      'acct' => self.cc_number,
-      'expdate' => cc_month + cc_year,
-      'cvv2' => self.cc_code,
-      'firstname' => self.first_name,
-      'lastname' => self.last_name,
-      'street' => self.address1,
-      'street2' => self.address2,
-      'city' => self.city,
-      'state' => (self.state.blank?) ? 'N/A' : self.state,
-      'countrycode' => self.country,
-      'zip' => self.zipcode,
-      'amt' => round_money(self.total).to_f,
-      'invnum' => self.uuid.gsub('-', '')
-    }
- 
-    self.line_items.each_with_index do |item, i|
-      params["l_number#{i}"] = item.product.code
-      params["l_name#{i}"] = item.product.name
-      params["l_amt#{i}"] = round_money(item.unit_price).to_f
-      params["l_qty#{i}"] = item.quantity
+    line_item_hasher = lambda do |item|
+      {
+        name: item.product.name,
+        sku: item.product.code,
+        price: round_money(item.unit_price).to_f.to_s,
+        currency: 'USD',
+        quantity: item.quantity
+      }
     end
-    
-    if self.coupon
-      params["l_number#{self.line_items.count}"] = self.line_items.count
-      params["l_name#{self.line_items.count}"] = self.coupon.description
-      params["l_amt#{self.line_items.count}"] = 0 - self.coupon.amount
-      params["l_qty#{self.line_items.count}"] = 1
-    end
-    
 
-    res = PayPal.make_nvp_call(params)
+    payment = PayPal::SDK::REST::Payment.new({
+      intent: 'sale',
+      payer: {
+        payment_method: 'credit_card',
+        funding_instruments: [{
+          credit_card: {
+            type: payment_type,
+            number: cc_number,
+            expire_month: cc_month.to_s,
+            expire_year: "20#{cc_year}",
+            cvv2: cc_code,
+            first_name: first_name,
+            last_name: last_name,
+            billing_address: {
+              line1: address1,
+              city: city,
+              state: state,
+              postal_code: zipcode,
+              country_code: country
+            }
+          }
+        }]
+      },
+      transactions: [{
+        item_list: {
+          items: line_items.map(&line_item_hasher)
+        },
+        amount: {
+          total: round_money(total).to_f.to_s,
+          currency: 'USD'
+        },
+        description: 'This is a payment transaction description.'
+      }]
+    })
 
-    if res.ack == 'Success' || res.ack == 'SuccessWithWarning'
-      self.transaction_number = res.transactionID
+#    if self.coupon
+#      params["l_number#{self.line_items.count}"] = self.line_items.count
+#      params["l_name#{self.line_items.count}"] = self.coupon.description
+#      params["l_amt#{self.line_items.count}"] = 0 - self.coupon.amount
+#      params["l_qty#{self.line_items.count}"] = 1
+#    end
+
+    if payment.create
+      self.transaction_number = payment.id
       return true
     else
-      set_order_errors_with_paypal_response(res)
+      set_order_errors_with_paypal_response(payment.error)
       return false
     end
   end
@@ -464,7 +462,7 @@ class Order < ActiveRecord::Base
 
     if res.ack == 'Success' || res.ack == 'SuccessWithWarning'
       self.status = 'R'
-      self.save()
+      self.save
     end
   end
 
@@ -483,39 +481,11 @@ class Order < ActiveRecord::Base
   end
 
   def set_order_errors_with_paypal_response(res)
-    if res.has_key? 'PAYMENTREQUEST_0_ACK'
-      ack = res['PAYMENTREQUEST_0_ACK']
-
-      if ack.start_with? 'Failure'
-        self.failure_code = res['PAYMENTREQUEST_0_ERRORCODE']
-        self.failure_reason = res['PAYMENTREQUEST_0_LONGMESSAGE']
-      end
-    else
-      ack = res['ACK']
-
-      if ack and ack.start_with? 'Failure'
-        i = 0
-        error_codes = []
-        failure_reasons = []
-
-        while true
-          break if not res.has_key? "L_ERRORCODE#{i}"
-          error_codes << res["L_ERRORCODE#{i}"]
-
-          msg = res["L_LONGMESSAGE#{i}"]
-          msg = res["L_SHORTMESSAGE#{i}"] if not msg
-          msg = '' if not msg
-          msg = msg[38..-1] if msg =~ /^This transaction cannot be processed. /
-
-          failure_reasons << msg if msg
-
-          i += 1
-        end
-
-        self.failure_code = error_codes.join(', ')
-        self.failure_reason = failure_reasons.join("\n")
-      end
-    end
+    failure_reasons = res['details'].map do |detail|
+      detail['issue']
+    end 
+    self.failure_code = res['message']
+    self.failure_reason = failure_reasons.join('\n')
   end
 
   private

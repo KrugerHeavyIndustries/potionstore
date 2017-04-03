@@ -3,18 +3,20 @@ module Store
     include PayPal::SDK::REST
 
     before_action :redirect_to_ssl
-    skip_before_filter :verify_authenticity_token, only: [ :create, :execute ]
+    skip_before_action :verify_authenticity_token, only: [ :create, :execute ]
 
     def create
-      @payment = Payment.new(payment_hash)
+      head :not_found and return if session[:order_id].nil?
+      order = ::Order.find(session[:order_id]) # this is a Potionshop Order model representation not a Paypal Order
+      @payment = Payment.new(payment_hash(order))
       if @payment.create
         render json: { paymentID: @payment.id }
       end
     end
 
     def execute
-      head :not_found and return if session[:order_id] == nil
-      order = ::Order.find(session[:order_id]) # this is a Potionshop Order model representation not a Paypal Order
+      head :not_found and return if session[:order_id].nil?
+      order = ::Order.find(session[:order_id])
       head :not_found and return if !order.pending?
 
       order.order_time = Time.now
@@ -38,6 +40,7 @@ module Store
         order.state = @payment.payer.payer_info.shipping_address.state
         order.zipcode = @payment.payer.payer_info.shipping_address.postal_code
         order.licensee_name = order.name
+        order.transaction_number = @payment.id
         order.finish_and_save
         session[:order_id] = order.id
       else
@@ -49,28 +52,23 @@ module Store
 
     private
 
-    def payment_hash
+    def payment_hash(order)
       {
         intent: 'sale', 
         payer: { payment_method: 'paypal' },
-        redirect_urls: { return_url: 'http://localhost:3000/store/order/thankyou', cancel_url: 'http://localhost:3000' }, 
+        redirect_urls: { return_url: url_for(controller: 'store/order', action: 'thankyou'), cancel_url: root_url },
         transactions: [
           item_list: {
-            items: [
-              name: 'item', 
-              sku: 'item',
-              price: '5',
-              currency: 'USD', 
-              quantity: 1
-            ]
+            items: order.line_items.map(&line_item_hash)
           },
-          amount: { 
-            total: '5',
-            currency: 'USD' 
-          },
-          description: 'This is the payment transaction description'
+          amount: order.total,
+          description: 'This is the sale description'
         ]
       }
+    end
+
+    def line_item_hash(item)
+      { name: item.product.name, sku: item.product.code, price: item.unit_price.to_f.to_s, currency: 'USD', quantity: item.quantity }
     end
   end
 end

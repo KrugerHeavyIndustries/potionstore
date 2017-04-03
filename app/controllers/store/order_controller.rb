@@ -143,12 +143,6 @@ class Store::OrderController < ApplicationController
       return
     end
 
-    # We need the next two ugly lines because Safari's form autofill sucks
-    params[:order][:address1] = params[:address1]
-    params[:order][:address2] = params[:address2]
-
-    params[:order].keys.each { |x| params[:order][x] = params[:order][x].strip if params[:order][x] != nil }
-
     @order = Order.new(order_params)
 
     # the order in the session is a bogus temporary one
@@ -215,6 +209,21 @@ class Store::OrderController < ApplicationController
     @print = true
     render :partial => 'receipt'
   end
+
+  def paypal_js_env
+    Rails.env.production? ? "'live'" : "'sandbox'"
+  end
+  helper_method :paypal_js_env
+
+  def paypal_js_create_payment_url
+    "'#{url_for(controller: 'store/paypal', action: 'create')}'"
+  end
+  helper_method :paypal_js_create_payment_url
+
+  def paypal_js_execute_payment_url
+    "'#{url_for(controller: 'store/paypal', action: 'execute')}'"
+  end
+  helper_method :paypal_js_execute_payment_url
 
   ## Private methods
   private
