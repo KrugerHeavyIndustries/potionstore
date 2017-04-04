@@ -144,29 +144,29 @@ $(document).ready(function(){
 
 <div class="narrow">
 	<h2>Billing Information</h2>
-    <p><label><span>First Name</span><%= text_field "order", "first_name", :size=>15, :class => "required" %></label></p>
-    <p><label><span>Last Name</span><%= text_field "order", "last_name", :size=>15, :class => "required" %></label></p>
+    <p><label><span>First Name</span><%= text_field "order", "first_name", size: 15, required: true %></label></p>
+    <p><label><span>Last Name</span><%= text_field "order", "last_name", size: 15, required: true %></label></p>
 
     <p id="company">
         <label><span>Company:</span><%= text_field "order", "company" %></label>
     </p>
 
-    <p><label><span>Address Line 1:</span><%= text_field 'order', 'address1', size: 30, class: 'required' %></label></p>
-    <p><label><span>Address Line 2:</span><%= text_field 'order', 'address2', size: 30, class: 'required' %></label></p>
+    <p><label><span>Address Line 1:</span><%= text_field 'order', 'address1', size: 30, required: true %></label></p>
+    <p><label><span>Address Line 2:</span><%= text_field 'order', 'address2', size: 30  %></label></p>
 
     <p>
-        <label id="city"><span>City:</span><%= text_field "order", "city", :size=>15 %></label>
-        <label id="state">State:<%= text_field "order", "state", :size=>4 %></label>
+        <label id="city"><span>City:</span><%= text_field "order", "city", size: 15, required: true %></label>
+        <label id="state">State:<%= text_field "order", "state", size: 4, required: true %></label>
     </p>
     <div class="cl"></div>
     <p>
-        <label><span>Postal/Zip Code:</span><%= text_field "order", "zipcode", :size=>10 %></label>
+        <label><span>Postal/Zip Code:</span><%= text_field "order", "zipcode", size: 10, required: true %></label>
     </p>
     <p>
 		<label><span>Country:</span><%= render :partial => "form_countries" %></label>
     </p>
 	<p>
-		<label><span>Email:</span><div><%= text_field "order", "email", :class => "required email" %></div></label>
+		<label><span>Email:</span><div><%= text_field 'order', 'email', type: 'email', required: true %></div></label>
 	</p>
 </div>
 
@@ -188,13 +188,13 @@ $(document).ready(function(){
 	<%= image_tag"store/discover.gif", :alt => 'Discover', :width => 37, :height => 23 %>
     </p>
 
-    <p><label><span>Credit Card Number:</span><%= text_field "order", "cc_number", :size=>24, :class => "required creditcard" %></label></p>
+    <p><label><span>Credit Card Number:</span><%= text_field "order", "cc_number", size: 24, required: true, class: "creditcard" %></label></p>
 
     <p id="ccexp">
         <label><span>Expiration Date:</span>
-		<%= text_field "order", "cc_month", :maxlength => 2, :class => "required" %></label>/<%= text_field "order", "cc_year", :maxlength=>2, :class => "required" %>
-		<label>CSC: <%= text_field "order", "cc_code", :size =>4 %></label>
-		<%= image_tag "store/cvv.png", :alt => "Security Code", :width => 37, :height => 21 %>
+		<%= text_field "order", "cc_month", maxlength: 2, required: true %></label>/<%= text_field "order", "cc_year", maxlength: 2, required: true %>
+		<label>CSC: <%= text_field "order", "cc_code", size: 4 %></label>
+		<%= image_tag "store/cvv.png", alt: 'Security Code', width: 37, height: 21 %>
     </p>
 </div>
 
@@ -202,7 +202,7 @@ $(document).ready(function(){
 
 <div class="narrow">
 	<h2>Almost There</h2>
-	<p><label><span>Name on License:</span> <%= text_field "order", "licensee_name", :class => "required" %></label></p>
+	<p><label><span>Name on License:</span> <%= text_field "order", "licensee_name", required: true %></label></p>
 	<p><label><span>Comment:</span><%= text_field "order", "comment" %></label></p>
 	<p><span>&nbsp;</span><label><input type="checkbox" name="subscribe" value="checked"/>
         Keep me updated with <%=$STORE_PREFS['company_name']%> news.</label></p>

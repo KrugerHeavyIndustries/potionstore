@@ -67,6 +67,7 @@ input.qty {
 {
     margin: 40px auto 0;
 }
+
 #products td:first-child
 {
     font-size: 18px;
@@ -182,6 +183,23 @@ input { margin-left: 0; }
 #ccexp img { vertical-align: middle; position: relative; top: -3px; }
 
 input#submit { margin: 10px 0 0 192px; }
+
+input[type=email] {
+
+  font-family: inherit;
+  font-size: 90%;
+
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+input:invalid {
+  background-color: #FDD;
+}
+
+input:focus:invalid {
+  outline: none;
+}
 
 #final_step { color: #999; font-family:helvetica, sans-serif; font-size: 11px; margin-left: 15px; }
 
