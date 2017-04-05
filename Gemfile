@@ -18,6 +18,8 @@ gem 'open-flash-chart', :github => 'KrugerHeavyIndustries/open-flash-chart'
 
 gem 'jquery-validation-rails'
 
+gem 'attribute_normalizer'
+
 group :test do
   gem 'minitest-reporters'
   gem 'rails-controller-testing'

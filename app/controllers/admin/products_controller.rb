@@ -86,7 +86,7 @@ module Admin
     private
 
     def product_params
-      params.require(:product).permit(:code, :name, :price, :image_path, :url, :download_url, :license_url, :active)
+      params.require(:product).permit(:code, :name, :price, :image_path, :url, :download_url, :license_url, :license_url_scheme, :active)
     end
 
   end
