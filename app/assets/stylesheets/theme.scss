@@ -1,61 +1,35 @@
-body {
-  background: #000 image-url('background.jpg');
-  margin: 0;
-  padding: 0;
-  font-family: helvetica, sans-serif;
-  font-size: 12px;
-  color: #dddddd;
+body
+{
+	margin: 0; padding: 0;
+	font-family: helvetica, sans-serif;
+    font-size: 12px;
+    color: #333;
 }
 
-h1 {
-  color: #6599CF;
-}
-
-a {
+a
+{
 	text-decoration: none;
 }
 
-a img {
+a img
+{
 	border: none;
 }
 
-ul {
+ul
+{
     padding: 0 0 0 20px;
     list-style-type: circle;
 }
 
-li {
+li
+{
     line-height: 1.5em;
     margin-bottom: 2px;
 }
 
-input {
-  color: #CCC;
-  background-color: #1A1513;
-  border: solid 1px #5B4714;
-}
-
-input[type='checkbox'] {
-  filter: invert(93%) hue-rotate(18deg) brightness(1.7);
-}
-
-input[type='radio'] {
-  filter: invert(93%) hue-rotate(200deg) brightness(1.7);
-}
-
-select {
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px'><polyline points='46.139,15.518 25.166,36.49 4.193,15.519' style='fill: #5b4714'/></svg>");
-  color: #CCC;
-  border: solid 1px #5B4714;
-  background-color: #1A1513;
-  background-repeat: no-repeat;
-  background-position: right 5px top 0px;
-  background-size: 16px 16px;
-  padding: 2px;
-  -webkit-appearance: none;
-}
-
-#copyright {
+#copyright
+{
 	font-size: 11px;
 	color: #888;
 	padding: 10px 0 0;	margin: 0;
@@ -129,19 +103,20 @@ hr
     padding-top: 1px;
 }
 
-#page a { color: #ffc403; }
+#page a { color: #2b627f; }
 #page a:hover { color: #2b627f; text-decoration: underline; }
 
 
-#page_top {
+#page_top
+{
     width: 902px;
     margin: 0 auto;
     padding: 0;
 }
 
-#page_top h1 {
-    //color: #ffc403;
-    color: #888;
+#page_top h1
+{
+    color: #ccc;
     margin: 0;
     padding: 40px 0 10px 0;
     height: 50px;
@@ -172,27 +147,33 @@ hr
     z-index: 1;
 }
 
-#page_top .tm {
+#page_top .tm
+{
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
     width: 878px;
-	  height: 22px;
+	height: 22px;
     float: left;
 }
 
-#page_top .tr {
+#page_top .tr
+{
     width: 23px;
-	  height: 23px;
+	height: 23px;
     float: left;
 }
 
-#page_content {
+#page_content
+{
     clear:both;
     margin: 0 auto 0;
+    width: 810px;
     padding: 10px 45px 40px !important;
-    border: 1px solid #313334;
+    padding: 10px 42px 40px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
     line-height: 1.3em;
-    background: transparent image-url('main_bg.png');
 }
 
 #page.narrow #page_top
