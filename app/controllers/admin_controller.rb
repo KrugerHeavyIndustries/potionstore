@@ -1,6 +1,5 @@
 class AdminController < ApplicationController
   # Authentication stuff
-  before_action :redirect_to_ssl
   before_action :check_authentication, :except => [:login]
 
   def login

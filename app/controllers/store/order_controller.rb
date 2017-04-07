@@ -1,8 +1,6 @@
 class Store::OrderController < ApplicationController
   layout "store"
 
-  before_action :redirect_to_ssl
-
   def index
     new
     render :action => 'new'
