@@ -1,5 +1,5 @@
 body {
-  background: #000 image-url('background.jpg');
+  background: #000 image-url('store/background.jpg');
   margin: 0;
   padding: 0;
   font-family: helvetica, sans-serif;
@@ -192,7 +192,7 @@ hr
     padding: 10px 45px 40px !important;
     border: 1px solid #313334;
     line-height: 1.3em;
-    background: transparent image-url('main_bg.png');
+    background: transparent image-url('store/main_bg.png');
 }
 
 #page.narrow #page_top
