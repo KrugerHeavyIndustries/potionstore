@@ -194,11 +194,10 @@ input[type=email] {
 }
 
 input:invalid {
-  background-color: #FDD;
 }
 
 input:focus:invalid {
-  outline: none;
+  border: 1px solid red;
 }
 
 #final_step { color: #999; font-family:helvetica, sans-serif; font-size: 11px; margin-left: 15px; }
