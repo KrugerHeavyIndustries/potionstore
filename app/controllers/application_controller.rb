@@ -10,12 +10,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def redirect_to_ssl
-    if is_live? && $STORE_PREFS['redirect_to_ssl']
-      redirect_to :protocol => "https://" unless (request.ssl? or request.local?)
-    end
-  end
-
 end
 
 

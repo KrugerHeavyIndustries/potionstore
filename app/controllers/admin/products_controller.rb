@@ -3,8 +3,6 @@ module Admin
     layout "admin"
     before_action :check_authentication
 
-    #before_filter :redirect_to_ssl, :check_authentication
-
     # GET /products
     # GET /products.xml
     def index
