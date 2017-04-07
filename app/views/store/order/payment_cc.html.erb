@@ -1,90 +1,8 @@
 <script type="text/javascript">
 
-function reset() {
-	$('#submit').get(0).disabled = false;
-	choose_cc();
-	setup_help_values();
-}
-
-var HELP_VALUES = new Array();
-HELP_VALUES['#order_cc_month'] = 'mm';
-HELP_VALUES['#order_cc_year'] = 'yy';
-HELP_VALUES['#order_company'] = 'optional';
-HELP_VALUES['#order_address2'] = 'optional';
-HELP_VALUES['#order_comment'] = 'optional';
-
-function determine_cc_type(cc_number) {
-	if (cc_number.length < 1) return null;
-	switch (true) {
-	case (cc_number[0] == '3'):
-		// Diners (Mastercard) (36) or Amex (34 or 37)
-		if (cc_number.length < 2) return null;
-		else if (cc_number[1] == '6') return 'MasterCard';
-		else return 'Amex';
-	case (cc_number[0] == '4'):
-		return 'Visa';
-	case (cc_number[0] == '5'):
-		return 'MasterCard';
-	case (cc_number[0] == '6'):
-		return 'Discover';
-	}
-}
-
-function choose_cc() {
-	cc_number = $('#order_cc_number').val().replace(/\s/g, ''); // Get the credit card number and strip white spaces
-	cc_type = determine_cc_type(cc_number);
-	if (cc_type) $("#"+cc_type).get(0).checked = "checked";
-
-	var card_types = new Array("Visa", "MasterCard", "Amex", "Discover");
-	for (i in card_types) {
-		input = $('#'+card_types[i]).get(0);
-		image = $('#'+card_types[i]).next().get(0);
-
-		if (card_types[i] == cc_type) {
-			image.style.opacity = 1;
-			image.style.filter="alpha(opacity=100)"; // for stupid IE
-		}
-		else {
-			image.style.opacity = 0.3;
-			image.style.filter="alpha(opacity=30)";
-		}
-	}
-}
-
-function update_licensee_name() {
-	if ($('#order_licensee_name').val() == '') {
-		var name = $('#order_first_name').val() + ' ' + $('#order_last_name').val();
-		$('#order_licensee_name').val(name);
-	}
-}
-
-onload = reset;
-onunload = reset;
-
 $(document).ready(function(){
-	$('#order_last_name').blur(update_licensee_name);
-	$('#order_cc_number').change(choose_cc);
-	$('#order_cc_number').keyup(choose_cc);
+  var resolver = new CreditCardResolver($('#order_cc_number'), $('p[id="cards"] > img'), $('p[id="cards"] > input[type="radio"]'));
 
-	$('#order_cc_month').focus(function() { setup_help_value('#order_cc_month'); });
-	$('#order_cc_month').blur( function() { setup_help_value('#order_cc_month'); });
-	$('#order_cc_year').focus( function() { setup_help_value('#order_cc_year'); });
-	$('#order_cc_year').blur(  function() { setup_help_value('#order_cc_year'); });
-	$('#order_company').focus( function() { setup_help_value('#order_company'); });
-	$('#order_company').blur(  function() { setup_help_value('#order_company'); });
-	$('#order_address2').focus(function() { setup_help_value('#order_address2'); });
-	$('#order_address2').blur( function() { setup_help_value('#order_address2'); });
-	$('#order_comment').focus( function() { setup_help_value('#order_comment'); });
-	$('#order_comment').blur(  function() { setup_help_value('#order_comment'); });
-
-	$('#purchase').validate({
-		submitHandler: function (form) {
-			choose_cc();
-			setup_help_values();
-			$('#submit').get(0).disabled = true;
-			form.submit();
-		}
-	});
 });
 
 </script>
@@ -133,7 +51,7 @@ $(document).ready(function(){
     </tr>
 </table>
 
-<%= form_tag({:action => "purchase"}, {:id => "purchase"}) do %>
+<%= form_for @order, url: { action: 'purchase' } do |f| %>
 
 <% for item in @order.line_items %>
 <%= hidden_field "items", String(item.product_id), :value => item.quantity %>
@@ -144,29 +62,30 @@ $(document).ready(function(){
 
 <div class="narrow">
 	<h2>Billing Information</h2>
-    <p><label><span>First Name</span><%= text_field "order", "first_name", :size=>15, :class => "required" %></label></p>
-    <p><label><span>Last Name</span><%= text_field "order", "last_name", :size=>15, :class => "required" %></label></p>
+
+    <p><label><span>First Name</span><%= f.text_field :first_name, size: 20, required: true %></label></p>
+    <p><label><span>Last Name</span><%= f.text_field :last_name, size: 20, required: true %></label></p>
 
     <p id="company">
-        <label><span>Company:</span><%= text_field "order", "company" %></label>
+        <label><span>Company:</span><%= f.text_field :company, placeholder: 'optional' %></label>
     </p>
 
-    <p><label><span>Address Line 1:</span><%= text_field 'order', 'address1', size: 30, class: 'required' %></label></p>
-    <p><label><span>Address Line 2:</span><%= text_field 'order', 'address2', size: 30, class: 'required' %></label></p>
+    <p><label><span>Address Line 1:</span><%= f.text_field :address1, size: 30, required: true %></label></p>
+    <p><label><span>Address Line 2:</span><%= f.text_field :address2, size: 30, placeholder: 'optional' %></label></p>
 
     <p>
-        <label id="city"><span>City:</span><%= text_field "order", "city", :size=>15 %></label>
-        <label id="state">State:<%= text_field "order", "state", :size=>4 %></label>
+        <label id="city"><span>City:</span><%= f.text_field :city, size: 15, required: true %></label>
+        <label id="state">State:<%= f.text_field :state, size: 4, required: true %></label>
     </p>
     <div class="cl"></div>
     <p>
-        <label><span>Postal/Zip Code:</span><%= text_field "order", "zipcode", :size=>10 %></label>
+        <label><span>Postal/Zip Code:</span><%= f.text_field :zipcode, size: 10, required: true %></label>
     </p>
     <p>
 		<label><span>Country:</span><%= render :partial => "form_countries" %></label>
     </p>
 	<p>
-		<label><span>Email:</span><div><%= text_field "order", "email", :class => "required email" %></div></label>
+		<label><span>Email:</span><div><%= f.email_field :email, required: true %></div></label>
 	</p>
 </div>
 
@@ -175,26 +94,26 @@ $(document).ready(function(){
 <div class="narrow">
 	<h2>Credit Card</h2>
     <p id="cards"><span>Card Type:</span>
-	<input id="Visa" type="radio" name="order[payment_type]" value="Visa" checked="checked" />
-	<%= image_tag "store/visa.gif", :alt => 'Visa', :width => 37, :height => 23 %>
+      <%= f.radio_button :payment_type, 'Visa', id: 'Visa', checked: true %>
+      <%= image_tag "store/visa.gif", :alt => 'Visa', :width => 37, :height => 23 %>
 
-	<input id="MasterCard" type="radio" name="order[payment_type]" value="MasterCard"/>
-	<%= image_tag "store/mc.gif", :alt => 'MasterCard', :width => 37, :height => 23 %>
+      <%= f.radio_button :payment_type, 'MasterCard', id: 'MasterCard' %>
+      <%= image_tag "store/mc.gif", :alt => 'MasterCard', :width => 37, :height => 23 %>
 
-	<input id="Amex" type="radio" name="order[payment_type]" value="Amex" />
-	<%= image_tag "store/amex.gif", :alt => 'Amex', :width => 37, :height => 23 %>
+      <%= f.radio_button :payment_type, 'Amex', id: 'Amex' %>
+      <%= image_tag "store/amex.gif", :alt => 'Amex', :width => 37, :height => 23 %>
 
-	<input id="Discover" type="radio" name="order[payment_type]" value="Discover" />
-	<%= image_tag"store/discover.gif", :alt => 'Discover', :width => 37, :height => 23 %>
+      <%= f.radio_button :payment_type, 'Discover', id: 'Discover' %>
+      <%= image_tag"store/discover.gif", :alt => 'Discover', :width => 37, :height => 23 %>
     </p>
 
-    <p><label><span>Credit Card Number:</span><%= text_field "order", "cc_number", :size=>24, :class => "required creditcard" %></label></p>
+    <p><label><span>Credit Card Number:</span><%= f.text_field :cc_number, size: 24, required: true, class: 'creditcard' %></label></p>
 
     <p id="ccexp">
         <label><span>Expiration Date:</span>
-		<%= text_field "order", "cc_month", :maxlength => 2, :class => "required" %></label>/<%= text_field "order", "cc_year", :maxlength=>2, :class => "required" %>
-		<label>CSC: <%= text_field "order", "cc_code", :size =>4 %></label>
-		<%= image_tag "store/cvv.png", :alt => "Security Code", :width => 37, :height => 21 %>
+		<%= f.text_field :cc_month, maxlength: 2, required: true, placeholder: 'mm' %></label>/<%= f.text_field :cc_year, maxlength: 2, required: true, placeholder: 'yy' %>
+		<label>CSC: <%= f.text_field :cc_code, size: 4, required: true %></label>
+		<%= image_tag "store/cvv.png", alt: 'Security Code', width: 37, height: 21 %>
     </p>
 </div>
 
@@ -202,12 +121,12 @@ $(document).ready(function(){
 
 <div class="narrow">
 	<h2>Almost There</h2>
-	<p><label><span>Name on License:</span> <%= text_field "order", "licensee_name", :class => "required" %></label></p>
-	<p><label><span>Comment:</span><%= text_field "order", "comment" %></label></p>
+	<p><label><span>Name on License:</span> <%= f.text_field :licensee_name, required: true %></label></p>
+	<p><label><span>Comment:</span><%= f.text_field :comment, placeholder: 'optional' %></label></p>
 	<p><span>&nbsp;</span><label><input type="checkbox" name="subscribe" value="checked"/>
         Keep me updated with <%=$STORE_PREFS['company_name']%> news.</label></p>
 </div>
 
-<p><input id="submit" name="commit" type="submit" value="&nbsp; Place Order &rarr;" /></p>
+<p><%= f.submit 'Place Order', { id: 'submit' } %></p>
 
 <% end %>

@@ -3,8 +3,6 @@ module Admin
     layout "admin"
     before_action :check_authentication
 
-    #before_filter :redirect_to_ssl, :check_authentication
-
     # GET /products
     # GET /products.xml
     def index
@@ -86,7 +84,7 @@ module Admin
     private
 
     def product_params
-      params.require(:product).permit(:code, :name, :price, :image_path, :url, :download_url, :license_url, :active)
+      params.require(:product).permit(:code, :name, :price, :image_path, :url, :download_url, :license_url, :license_url_scheme, :active)
     end
 
   end

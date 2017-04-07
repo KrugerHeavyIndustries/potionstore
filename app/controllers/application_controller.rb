@@ -1,6 +1,3 @@
-# Filters added to this controller will be run for all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception
@@ -10,12 +7,6 @@ class ApplicationController < ActionController::Base
       session[:intended_url] = request.url
       logger.debug('intended_url: ' + session[:intended_url])
       redirect_to :controller => "/admin", :action => "login"
-    end
-  end
-
-  def redirect_to_ssl
-    if is_live? && $STORE_PREFS['redirect_to_ssl']
-      redirect_to :protocol => "https://" unless (request.ssl? or request.local?)
     end
   end
 

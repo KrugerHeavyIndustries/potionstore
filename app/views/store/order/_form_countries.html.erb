@@ -1,4 +1,4 @@
 	<select id="countries" name="order[country]">
-<%= country = @order.country.blank? ? "US" : @order.country
+<%= country = @order.country.blank? ? 'US' : @order.country
   options_for_select(country_name_and_code_pairs(), country) %>
 	</select>
