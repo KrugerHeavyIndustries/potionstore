@@ -2,8 +2,7 @@ module Store
   class PaypalController < ApplicationController
     include PayPal::SDK::REST
 
-    before_action :redirect_to_ssl
-    skip_before_action :verify_authenticity_token, only: [ :create, :execute ]
+    #skip_before_action :verify_authenticity_token, only: [ :create, :execute ]
 
     def create
       head :not_found and return if session[:order_id].nil?
@@ -59,16 +58,16 @@ module Store
         redirect_urls: { return_url: url_for(controller: 'store/order', action: 'thankyou'), cancel_url: root_url },
         transactions: [
           item_list: {
-            items: order.line_items.map(&line_item_hash)
+            items: order.line_items.map { |item| line_item_hash(item) }
           },
-          amount: order.total,
+          amount: { total: order.total.to_f.to_s, currency: 'USD' },
           description: 'This is the sale description'
         ]
       }
     end
 
     def line_item_hash(item)
-      { name: item.product.name, sku: item.product.code, price: item.unit_price.to_f.to_s, currency: 'USD', quantity: item.quantity }
+      { name: item.product.name, sku: item.product.code, price: item.unit_price.to_i.to_s, currency: 'USD', quantity: item.quantity }
     end
   end
 end

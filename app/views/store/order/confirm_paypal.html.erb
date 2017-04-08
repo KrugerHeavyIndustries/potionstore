@@ -1,17 +1,19 @@
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 <script>
+  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
   paypal.Button.render({
     env: <%= raw paypal_js_env %>,
     payment: function(resolve, reject) {
-      var CREATE_PAYMENT_URL = <%= raw paypal_js_create_payment_url %>;
-      paypal.request.post(CREATE_PAYMENT_URL)
+      const CREATE_PAYMENT_URL = <%= raw paypal_js_create_payment_url %>;
+      paypal.request.post(CREATE_PAYMENT_URL, {}, options = { headers: { 'X-CSRF-Token':CSRF_TOKEN }})
             .then(function(data) { resolve(data.paymentID); })
             .catch(function(error) { reject(error); });
     },
     onAuthorize: function(data, actions) { 
       var EXECUTE_PAYMENT_URL = <%= raw paypal_js_execute_payment_url %>;
       paypal.request.post(EXECUTE_PAYMENT_URL, {
-        paymentID: data.paymentID, payerID: data.payerID })
+        paymentID: data.paymentID, payerID: data.payerID },
+        options = { headers: { 'X-CSRF-Token':CSRF_TOKEN }})
           .then(function(data) { return actions.redirect(); })
           .catch(function(error) { /* go to an error page */ });
     },
