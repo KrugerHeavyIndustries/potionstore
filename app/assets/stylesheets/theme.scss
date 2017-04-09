@@ -81,6 +81,10 @@ select {
 	padding: 3px;
 }
 
+#license_keys code {
+  color: #dddddd;
+}
+
 hr
 {
 	height: 1px;
@@ -299,4 +303,8 @@ ul.links
 {
     margin: 0;
     padding: 0;
+}
+
+.box {
+  background-color: inherit;
 }
