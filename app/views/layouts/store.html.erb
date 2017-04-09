@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title><%=$STORE_PREFS['store_name']%></title>
-    <link rel="icon" href="/favicon.png" type="image/png"/>
-	<%= stylesheet_link_tag 'store', 'theme', media: 'all' %>
-	<%= javascript_include_tag 'application' %>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title><%=$STORE_PREFS['store_name']%></title>
+  <link rel="icon" href="/favicon.png" type="image/png"/>
+  <%= stylesheet_link_tag 'store', 'theme', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+  <%= csrf_meta_tags %>
 </head>
 <body>
 <div id="page" class="narrow">

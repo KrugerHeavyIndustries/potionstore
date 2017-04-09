@@ -1,14 +1,9 @@
 <h1>Purchase Software</h1>
 
-<script type="text/javascript">
-/* Dynamically adjust price for bundling (Commented out for illustrative purposes) */
-// function update_prices() { if ($('#items_3').val() > 0) $('#item_2_price').html('$9.95'); else $('#item_2_price').html('$12.95'); }
+<script>
 $(document).ready(function(){
-//	update_prices();
 	$('.creditcards img').click(function() { $('#creditcard').get(0).checked = 'checked'; });
 	$('.paypal img').click(function() { $('#paypal').get(0).checked = 'checked'; });
-//	$('#items_3').keyup(update_prices);
-//	$('#items_3').change(update_prices);
 });
 </script>
 
@@ -55,7 +50,8 @@ $(document).ready(function(){
 			</p>
 			<p class="paypal" style="font: 10px helvetica">
 				<%= radio_button_tag 'payment_type', 'paypal', @payment_type == 'paypal', :id => 'paypal' %>
-				<%= image_tag "store/paypal.gif", :alt => "Paypal" %>
+        <%= image_tag "store/paypal.gif", :alt => "Paypal" %>
+        <!-- <div id="paypal-button"></div> -->
 				Shop without sharing your financial information
 			</p>
 		</td>

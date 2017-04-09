@@ -17,8 +17,8 @@ gem 'uglifier'
 gem 'open-flash-chart', :github => 'KrugerHeavyIndustries/open-flash-chart'
 
 gem 'jquery-validation-rails'
-
 gem 'attribute_normalizer'
+gem 'paypal-sdk-rest'
 
 group :test do
   gem 'minitest-reporters'

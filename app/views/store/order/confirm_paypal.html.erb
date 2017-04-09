@@ -1,22 +1,33 @@
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+  paypal.Button.render({
+    env: <%= raw paypal_js_env %>,
+    payment: function(resolve, reject) {
+      const CREATE_PAYMENT_URL = <%= raw paypal_js_create_payment_url %>;
+      paypal.request.post(CREATE_PAYMENT_URL, {}, options = { headers: { 'X-CSRF-Token':CSRF_TOKEN }})
+            .then(function(data) { resolve(data.paymentID); })
+            .catch(function(error) { reject(error); });
+    },
+    onAuthorize: function(data, actions) { 
+      var EXECUTE_PAYMENT_URL = <%= raw paypal_js_execute_payment_url %>;
+      paypal.request.post(EXECUTE_PAYMENT_URL, {
+        paymentID: data.paymentID, payerID: data.payerID },
+        options = { headers: { 'X-CSRF-Token':CSRF_TOKEN }})
+          .then(function(data) { return actions.redirect(); })
+          .catch(function(error) { /* go to an error page */ });
+    },
+    onCancel: function(data, actions) { 
+      return actions.redirect();
+    }
+  }, '#paypal-button');
+
+</script>
 <script type="text/javascript">
-
-function validate() {
-	setup_help_values();
-	$('#submit').get(0).disabled = true;
-	return true;
-}
-
-function reset() {
-	$('#submit').get(0).disabled = false;
-	setup_help_values();
-}
 
 var HELP_VALUES = new Array();
 HELP_VALUES['#order_company'] = 'optional';
 HELP_VALUES['#order_comment'] = 'optional';
-
-onload = reset;
-onunload = reset;
 
 $(document).ready(function(){
 	$('#order_company').focus( function() { setup_help_value('#order_company'); });
@@ -79,28 +90,10 @@ $(document).ready(function(){
 	</table>
 </div>
 
-<%= form_tag({:action => "purchase_paypal"}, {:id => "purchase_paypal"}) do %>
-
 <div class="d"></div>
-
-<div class="narrow">
-	<h2>Your Information</h2>
-    <p><span>Name on License:</span> <%= text_field "order", "licensee_name", :class => "required" %></p>
-
-    <p><label><span>Email:</span><%= text_field "order", "email", :class => "required" %></label></p>
-
-    <p id="company" style="margin-top:10px">
-        <label><span>Company:</span><%= text_field "order", "company" %></label>
-    </p>
-
-    <p>
-        <label><span>Comment:</span><%= text_field "order", "comment" %></label>
-    </p>
-
 	<p><span>&nbsp;</span><label><input type="checkbox" name="subscribe" value="checked"/>
         Keep me updated with <%=$STORE_PREFS['company_name']%> news.</label></p>
+  <p><span>&nbsp;</span><div id="paypal-button"></div></p>
 </div>
 
-<p><input id="submit" name="commit" type="submit" value="&nbsp; Place Order &rarr;" /></p>
 
-<% end %>

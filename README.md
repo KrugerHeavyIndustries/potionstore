@@ -60,29 +60,20 @@ and running on your local machine.
   # 7. Click on "API Access."
   # 8. Click the "Request API Credentials" link.
   # 9. Leave the default selection on "Request API signature" and click the "Agree and Submit" button.
-  # 10. Fill in api_username and api_password and api_signature with the given information.
+  # 10. Fill in client_id and client_secret with provided values
 
-  # Development settings
+  # Development settings (sandbox)
   development:
-    pi_username: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    api_password: "XXXXXXXXXXXXXXXX"
-    api_signature: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    wiredump: true # Turn on logging of communications with PayPal during development
+    client_id: XXXXXXXXXXXXXXXXXXXXXXX
+    client_secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    mode: sandbox
+    sandbox_email_address: xxxxx@xxxxx.xxxx
 
-  # Follow steps 6 to 10 but with your real PayPal account.
-  # NOTE: Your PayPal account must have Website Payments Pro already for this to work.
-
-  # Live settings
   production:
-    api_username: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    api_password: "XXXXXXXXXXXXXXXX"
-    api_signature: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    # Don't turn this on in production mode unless you absolutely have to. It'll log people's credit card information
-    wiredump: false 
+    client_id: XXXXXXXXXXXXXXXXXXXXXXX
+    client_secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    mode: live
 
-  # Common setting
-  # NOTE: This file is already provided for you. You don't need to download it again.
-  ca_file: "certs/api_cert_chain.crt"
   ```
 - Set session store secret
   Edit config/environment.rb and modify the config.action_controller.session setting
