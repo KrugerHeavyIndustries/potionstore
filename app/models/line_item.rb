@@ -43,7 +43,9 @@ class LineItem < ActiveRecord::Base
   end
 
   def license_url
-    return self.product.license_url_scheme + '://' + self.license_key rescue nil
+    return nil if product.license_url_scheme.blank?
+    return self.product.license_url_scheme + '://' + self.license_key
+    rescue nil
   end
 
 end
