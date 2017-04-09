@@ -1,9 +1,12 @@
-class @CreditCardResolver
-  constructor: (@field, @images, @radios) ->
+class @CreditCardPayment
+  constructor: (field, images, radios) ->
+    @field = $(field)
+    @images = $(images)
+    @radios = $(radios)
     @images.css({ 'filter':'alpha:(opacity=30)', 'opacity':'0.3' });
     @field.on 'keyup change', (event) =>
       type = @determineType(@cardNumber(@field))
-      @updateOpacity(type)
+      @_updateOpacity(type)
 
   cardNumber: (field) ->
     field.val().replace(/\s/g, '')
@@ -28,7 +31,7 @@ class @CreditCardResolver
       when '6'
         'Discover'
 
-  updateOpacity: (type) ->
+  _updateOpacity: (type) ->
     for image in @images
       image = $(image)
       if image.attr('alt') == type

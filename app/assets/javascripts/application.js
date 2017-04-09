@@ -1,4 +1,4 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.validate
-//= require store
+//= require credit_card_payment

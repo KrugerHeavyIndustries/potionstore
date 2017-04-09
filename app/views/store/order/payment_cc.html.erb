@@ -1,10 +1,7 @@
 <script type="text/javascript">
-
 $(document).ready(function(){
-  var resolver = new CreditCardResolver($('#order_cc_number'), $('p[id="cards"] > img'), $('p[id="cards"] > input[type="radio"]'));
-
+  const payment = new CreditCardPayment('#order_cc_number', 'p[id="cards"] > img', 'p[id="cards"] > input[type="radio"]');
 });
-
 </script>
 
 <h1>Checkout</h1>
