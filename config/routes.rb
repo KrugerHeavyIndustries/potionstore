@@ -1,6 +1,6 @@
 Potionstore::Application.routes.draw do
+  root to: 'store/order#index'
   get 'store' => 'store/order#new'
-  get '' => 'store/order#index'
 
   get 'admin' => 'admin#index'
   patch 'admin/products' => 'admin/products#update'
@@ -12,9 +12,11 @@ Potionstore::Application.routes.draw do
     post 'order/purchase' => "store/order#purchase"
     get 'order/thankyou' => "store/order#thankyou"
     get 'order/receipt' => "store/order#receipt"
-    get 'order/purchase_paypal' => "store/order#purchase_paypal"
     get 'order/confirm_paypal' => "store/order#confirm_paypal"
     resources :order, :singular => true, :module => "store"
+
+    post 'paypal/create' => 'store/paypal#create'
+    post 'paypal/execute' => 'store/paypal#execute'
     
     # lost license routes
     get 'lost_license' => 'store/lost_license#index'

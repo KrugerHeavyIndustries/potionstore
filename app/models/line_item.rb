@@ -23,7 +23,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def total
-    return round_money(quantity * self.unit_price)
+    return quantity * unit_price
   end
 
   def volume_price
@@ -43,7 +43,9 @@ class LineItem < ActiveRecord::Base
   end
 
   def license_url
-    return self.product.license_url_scheme + '://' + self.license_key rescue nil
+    return nil if product.license_url_scheme.blank?
+    return self.product.license_url_scheme + '://' + self.license_key
+    rescue nil
   end
 
 end

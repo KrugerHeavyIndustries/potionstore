@@ -30,8 +30,6 @@ end
 
 load_store_prefs()
 
-
-# Convenience global function for rounding to monetary amount
 def round_money(amount)
-  return ("%01.2f" % amount).to_f()
+  return "%01.2f" % amount
 end
