@@ -63,7 +63,7 @@ class Order < ActiveRecord::Base
   end
 
   def calculated_total
-    return round_money(total_before_applying_coupons() - coupon_amount())
+    return total_before_applying_coupons() - coupon_amount()
   end
 
   def total_before_applying_coupons
@@ -71,7 +71,7 @@ class Order < ActiveRecord::Base
     for item in self.line_items
         total = total + item.total
     end
-    return round_money(total)
+    return total
   end
 
   ## tax and shipping are hard-wired to 0 for now
@@ -88,11 +88,11 @@ class Order < ActiveRecord::Base
     return coupon.amount if coupon.percentage == nil
     for item in self.line_items
       if coupon && coupon.percentage != nil && coupon.product_code == item.product.code
-        return round_money(item.total * coupon.percentage / 100.0)
+        return item.total * coupon.percentage / 100.0
       end
     end
     if coupon && coupon.percentage != nil && coupon.product_code == 'all'
-      return round_money(total_before_applying_coupons() * (coupon.percentage / 100.0))
+      return total_before_applying_coupons() * (coupon.percentage / 100.0)
     end
     return 0
   end
@@ -390,7 +390,7 @@ class Order < ActiveRecord::Base
       {
         name: item.product.name,
         sku: item.product.code,
-        price: round_money(item.unit_price).to_f.to_s,
+        price: round_money(item.unit_price),
         currency: 'USD',
         quantity: item.quantity
       }
@@ -424,7 +424,7 @@ class Order < ActiveRecord::Base
           items: line_items.map(&line_item_hasher)
         },
         amount: {
-          total: round_money(total).to_f.to_s,
+          total: round_money(total),
           currency: 'USD'
         },
         description: 'This is a payment transaction description.'

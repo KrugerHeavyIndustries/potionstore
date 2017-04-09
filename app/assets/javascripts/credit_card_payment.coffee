@@ -7,6 +7,7 @@ class @CreditCardPayment
     @field.on 'keyup change', (event) =>
       type = @determineType(@cardNumber(@field))
       @_updateOpacity(type)
+      @_updateRadioButton(type)
 
   cardNumber: (field) ->
     field.val().replace(/\s/g, '')
@@ -38,3 +39,8 @@ class @CreditCardPayment
         image.css({ 'filter':'alpha:(opacity=100)', 'opacity':'1.0' })
       else 
         image.css({ 'filter':'alpha:(opacity=30)', 'opacity':'0.3' })
+
+  _updateRadioButton: (type) ->
+    for radio in @radios
+      radio = $(radio)
+      radio.prop('checked', radio.attr('value') == type)

@@ -23,7 +23,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def total
-    return round_money(quantity * self.unit_price)
+    return quantity * unit_price
   end
 
   def volume_price
