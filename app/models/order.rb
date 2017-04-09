@@ -330,7 +330,7 @@ class Order < ActiveRecord::Base
     return if ListSubscriber.find_by_email(self.email) != nil
     subscriber = ListSubscriber.new
     subscriber.email = self.email
-    subscriber.save()
+    subscriber.save
   end
 
   def save
@@ -380,7 +380,7 @@ class Order < ActiveRecord::Base
     self.save
 
     if self.email_receipt_when_finishing
-      OrderMailer.thankyou(self).deliver if is_live?()
+      OrderMailer.thankyou(self).deliver
     end
   end
 

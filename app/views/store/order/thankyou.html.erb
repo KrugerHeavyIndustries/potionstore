@@ -41,7 +41,9 @@
 	<tr>
 		<td class="first"><b><%=item.product.name%>:</b></td>
 		<td><code style="font-size:13px"><%= item.license_key %></code></td>
+    <% unless item.license_url.blank? %>
 		<td><a class="button" href="<%= item.license_url %>">ACTIVATE NOW</a></td>
+    <% end %>
 	</tr>
 <% end %>
 </table>
