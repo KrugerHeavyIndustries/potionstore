@@ -2,10 +2,11 @@
 lock "3.8.0"
 
 set :application, "potionstore"
-set :repo_url, "ssh://git@miskatonic.krugerheavyindustries.com:7990/www"
+set :repo_url, "ssh://git@miskatonic.krugerheavyindustries.com:7990/www/potionstore.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, "feature/khi"
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/var/rails/potionstore"
