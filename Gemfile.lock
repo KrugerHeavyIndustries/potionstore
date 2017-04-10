@@ -45,10 +45,24 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    airbrussh (1.1.2)
+      sshkit (>= 1.6.1, != 1.7.0)
     ansi (1.5.0)
     arel (7.1.4)
     attribute_normalizer (1.2.0)
     builder (3.2.3)
+    capistrano (3.8.0)
+      airbrussh (>= 1.0.0)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (>= 1.9.0)
+    capistrano-bundler (1.2.0)
+      capistrano (~> 3.1)
+      sshkit (~> 1.2)
+    capistrano3-puma (3.1.0)
+      capistrano (~> 3.7)
+      capistrano-bundler
+      puma (~> 3.4)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.2.x)
@@ -87,6 +101,9 @@ GEM
       i18n (>= 0.6.4, <= 0.7.0)
       sixarm_ruby_unaccent (>= 1.1.1, < 2)
     multi_json (1.12.1)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (4.1.0)
     nio4r (1.2.1)
     nokogiri (1.7.0.1)
       mini_portile2 (~> 2.1.0)
@@ -95,6 +112,7 @@ GEM
       xml-simple
     pg (0.19.0)
     power_assert (1.0.1)
+    puma (3.8.2)
     rack (2.0.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -142,6 +160,9 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sshkit (1.13.1)
+      net-scp (>= 1.1.2)
+      net-ssh (>= 2.8.0)
     test-unit (3.2.3)
       power_assert
     thor (0.19.4)
@@ -163,6 +184,8 @@ PLATFORMS
 
 DEPENDENCIES
   attribute_normalizer
+  capistrano
+  capistrano3-puma
   coffee-rails
   dynamic_form
   jquery-rails
@@ -172,6 +195,7 @@ DEPENDENCIES
   open-flash-chart!
   paypal-sdk-rest
   pg
+  puma
   rails
   rails-controller-testing
   sass-rails
@@ -181,4 +205,4 @@ DEPENDENCIES
   will_paginate
 
 BUNDLED WITH
-   1.14.4
+   1.14.6

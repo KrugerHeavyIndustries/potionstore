@@ -23,4 +23,13 @@ gem 'paypal-sdk-rest'
 group :test do
   gem 'minitest-reporters'
   gem 'rails-controller-testing'
+
+  # Use capistrano for deployment
+  gem 'capistrano'
+  gem 'capistrano'
+  gem 'capistrano3-puma'
+end
+
+group :production do
+  gem 'puma'
 end
