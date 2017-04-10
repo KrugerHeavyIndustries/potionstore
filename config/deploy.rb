@@ -2,7 +2,7 @@
 lock "3.8.0"
 
 set :application, "potionstore"
-set :repo_url, "ssh://git@miskatonic.krugerheavyindustries.com:7990/www/potionstore.git"
+set :repo_url, "ssh://git@miskatonic.krugerheavyindustries.com:7999/www/potionstore.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
