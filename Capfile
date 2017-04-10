@@ -34,6 +34,7 @@ install_plugin Capistrano::SCM::Git
 # require "capistrano/rails/migrations"
 # require "capistrano/passenger"
 
+require 'capistrano/rails'
 require 'capistrano/puma'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined

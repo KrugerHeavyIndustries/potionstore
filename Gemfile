@@ -26,7 +26,7 @@ group :test do
 
   # Use capistrano for deployment
   gem 'capistrano'
-  gem 'capistrano'
+  gem 'capistrano-rails'
   gem 'capistrano3-puma'
 end
 
