@@ -19,6 +19,7 @@ gem 'open-flash-chart', :github => 'KrugerHeavyIndustries/open-flash-chart'
 gem 'jquery-validation-rails'
 gem 'attribute_normalizer'
 gem 'paypal-sdk-rest'
+gem 'pin_payment'
 
 group :test do
   gem 'minitest-reporters'

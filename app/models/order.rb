@@ -383,6 +383,36 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def pin_payment(request)
+    charge = PinPayment::Charge.create(
+      email: email,
+      amount: (total.to_f * 100).to_i,
+      currency: 'USD',
+      description: "Kruger Heavy Industries Order #{self.id}",
+      ip_address: request.ip,
+      card: {
+        number: cc_number,
+        expiry_month: cc_month,
+        expiry_year: "20#{cc_year}".to_i,
+        cvc: cc_code,
+        name: name,
+        address_line1: address1,
+        address_city: city,
+        address_postcode: zipcode,
+        address_state: state,
+        address_country: country
+      }
+    )
+
+    if charge.success?
+      self.transaction_number = charge.token
+      return true
+    end
+  rescue PinPayment::Error => e
+    set_order_errors_from_pin_error(e)
+    return false
+  end
+
   # PayPal related methods
   def paypal_direct_payment(request)
 
@@ -478,6 +508,11 @@ class Order < ActiveRecord::Base
     else
       return false
     end
+  end
+
+  def set_order_errors_from_pin_error(error)
+    self.failure_code = error.class.name
+    self.failure_reason = error.message
   end
 
   def set_order_errors_with_paypal_response(res)

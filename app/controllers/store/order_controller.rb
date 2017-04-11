@@ -107,9 +107,9 @@ class Store::OrderController < ApplicationController
 
     # Actually send out the payload
     if @order.cc_order?
-      success = @order.paypal_direct_payment(request)
+      success = @order.pin_payment(request)
       @order.status = success ? 'C' : 'F'
-      @order.finish_and_save() if success
+      @order.finish_and_save if success
 
       respond_to do |format|
         if success
@@ -168,7 +168,7 @@ class Store::OrderController < ApplicationController
 
     # Actually send out the payload
     if @order.cc_order?
-      success = @order.paypal_direct_payment(request)
+      success = @order.pin_payment(request)
       finish_order(success)
     else
       render :action => 'failed', :layout => 'error' and return
@@ -262,11 +262,11 @@ class Store::OrderController < ApplicationController
 
   def finish_order(success)
     if params[:subscribe] && params[:subscribe] == 'checked'
-      @order.subscribe_to_list()
+      @order.subscribe_to_list
     end
 
     @order.status = success ? 'C' : 'F'
-    @order.finish_and_save()
+    @order.finish_and_save
 
     if success
       session[:order_id] = @order.id
