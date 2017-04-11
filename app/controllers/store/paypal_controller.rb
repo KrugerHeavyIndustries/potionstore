@@ -60,14 +60,14 @@ module Store
           item_list: {
             items: order.line_items.map { |item| line_item_hash(item) }
           },
-          amount: { total: order.total.to_f.to_s, currency: 'USD' },
+          amount: { total: round_money(order.total), currency: 'USD' },
           description: 'This is the sale description'
         ]
       }
     end
 
     def line_item_hash(item)
-      { name: item.product.name, sku: item.product.code, price: item.unit_price.to_i.to_s, currency: 'USD', quantity: item.quantity }
+      { name: item.product.name, sku: item.product.code, price: round_money(item.unit_price), currency: 'USD', quantity: item.quantity }
     end
   end
 end
