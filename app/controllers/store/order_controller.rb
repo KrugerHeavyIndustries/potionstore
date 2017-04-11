@@ -65,7 +65,7 @@ class Store::OrderController < ApplicationController
     else
       # credit card order
       # put in a dummy credit card number for testing
-      @order.cc_number = '4916306176169494' if not is_live?()
+      @order.cc_number = '4916306176169494' if not is_live?
 
       render :action => 'payment_cc'
     end
@@ -209,7 +209,7 @@ class Store::OrderController < ApplicationController
   end
 
   def paypal_js_env
-    Rails.env.production? ? "'live'" : "'sandbox'"
+    Rails.env.production? ? "'production'" : "'sandbox'"
   end
   helper_method :paypal_js_env
 
