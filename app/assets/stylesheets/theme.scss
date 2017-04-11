@@ -55,6 +55,11 @@ select {
   -webkit-appearance: none;
 }
 
+#price-info {
+  font-size: 10px;
+  color: #888;
+}
+
 #copyright {
 	font-size: 11px;
 	color: #888;
@@ -63,20 +68,17 @@ select {
 	clear: both;
 }
 
-#footer p 
-{
+#footer {
 	margin: 0;
-    padding: 8px 0 0;
-    text-align: center;
+  padding: 8px 0 0;
+  text-align: center;
 }
 
-#footer #copyright a
-{
+#footer #copyright a {
 	color: #888;
 }
 
-#copyright strong
-{
+#copyright strong {
 	border: 1px dotted #555;
 	padding: 3px;
 }
