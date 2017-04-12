@@ -12,9 +12,8 @@ google_analytics_account: ""
 include_mint: false
 paypal_express_checkout_header_image: "https://www.mycompany.com/images/mylogo.png"
 
-# Email addresses
 support_email: "support@mycompany.com"
-sales_email: "sales@mycompany.com"
+contact_url: "https://www.mycompany.com/contact"
 
 purchase_receipt_sender_email: "My Company <info@mycompany.com>"
 purchase_receipt_bcc_email: "orders@m7company.com"
