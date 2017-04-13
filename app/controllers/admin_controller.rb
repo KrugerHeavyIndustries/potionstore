@@ -30,7 +30,7 @@ class AdminController < ApplicationController
   def index
     if Product.count == 0
       flash[:notice] = "This store doesn't have any products! Add some!"
-      redirect_to :action => 'products' and return
+      redirect_to controller: 'admin/products', action: 'index' and return
     end
 
     revenue_summary()
