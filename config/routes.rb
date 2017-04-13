@@ -6,6 +6,7 @@ Potionstore::Application.routes.draw do
   patch 'admin/products' => 'admin/products#update'
   get  'admin/login' => 'admin#login'
   post 'admin/login' => 'admin#login'
+  get 'admin/logout' => 'admin#logout'
   
   scope 'store' do
     post 'order/payment' => "store/order#payment"
