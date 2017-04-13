@@ -17,13 +17,13 @@ $(document).ready(function(){
 <% for product in @products %>
 	<tr>
 		<td>
-			<a href="<%=product.url %>">
-				<% if not product.image_path.blank? %>
-				<img src="<%= product.image_path %>" alt="">
-				<% else %>
-        <%= image_tag "store/application_icon.png" %>
-        <% end %>
-				<%= product.name %>
+      <a href="<%= product.url %>">
+        <% if not product.image_path.blank? -%>
+          <img src="<%= product.image_path %>" alt="Application Icon">
+        <% else %>
+          <%= image_tag "store/application_icon.png" -%>
+        <% end -%>
+        <%= product.name %>
 			</a>
 		</td>
 		<td>
