@@ -71,26 +71,6 @@ class CreateTables < ActiveRecord::Migration
     add_foreign_key :line_items, :orders, :dependent => :delete
     add_foreign_key :line_items, :products
     add_foreign_key :orders, :admin_coupons
-
-    p = Product.new
-    p.code = "foo"
-    p.name = "Footion v1"
-    p.price = 12.95
-    p.image_path = "/images/store/application_icon.png"
-    p.url = "http://www.mycompany.com/foo/"
-    p.download_url = "http://www.mycompany.com/foo/download/"
-    p.license_url_scheme = "x-com-mycompany-license-footion"
-    p.save()
-
-    p = Product.new
-    p.code = "bar"
-    p.name = "Barsoap v1"
-    p.price = 24.95
-    p.url = "http://www.mycompany.com/bar/"
-    p.image_path = "/images/store/application_icon.png"
-    p.download_url = "http://www.mycompany.com/bar/download/"
-    p.license_url_scheme = "x-com-mycompany-license-barsoap"
-    p.save()
   end
 
   def self.down
