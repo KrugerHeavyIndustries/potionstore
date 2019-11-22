@@ -28,7 +28,7 @@ append :linked_files, "config/database.yml", "config/secrets.yml", "config/store
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
 
 # Default value for default_env is {}
-set :default_env, { path: "/home/deploy/.gem/ruby/2.3/bin:$PATH", RAILS_SERVE_STATIC_FILES: "true" }
+set :default_env, { path: "/home/deploy/.yarn/bin:$PATH", RAILS_SERVE_STATIC_FILES: "true" }
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
