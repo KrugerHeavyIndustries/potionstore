@@ -93,7 +93,7 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mini_portile2 (2.1.0)
+    mini_portile2 (2.4.0)
     minitest (5.10.1)
     minitest-reporters (1.1.14)
       ansi
@@ -108,8 +108,8 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
     nio4r (1.2.1)
-    nokogiri (1.7.0.1)
-      mini_portile2 (~> 2.1.0)
+    nokogiri (1.10.5)
+      mini_portile2 (~> 2.4.0)
     paypal-sdk-rest (1.6.0)
       multi_json (~> 1.0)
       xml-simple
@@ -211,4 +211,4 @@ DEPENDENCIES
   will_paginate
 
 BUNDLED WITH
-   1.14.6
+   1.17.2
