@@ -1,9 +1,8 @@
 module Admin
-  class Coupon < ActiveRecord::Base
+  class Coupon < ApplicationRecord
     validates :code, :presence => true
 
-    def initialize
-      super()
+    after_initialize do
       self.coupon = Coupon.random_string_of_length(16).upcase
       self.used_count = 0
       self.use_limit = 1
