@@ -148,8 +148,6 @@ GEM
       ffi (~> 1.0)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.2.1)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -208,7 +206,7 @@ DEPENDENCIES
   pg
   rails (~> 5.2.0)
   rails-controller-testing
-  sass-rails
+  sassc-rails (~> 2.1)
   spring
   spring-watcher-listen (~> 2.0.0)
   test-unit

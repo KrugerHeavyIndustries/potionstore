@@ -15,7 +15,7 @@ gem 'dynamic_form'
 gem 'jquery-rails'
 gem 'test-unit'
 
-gem 'sass-rails'
+gem 'sassc-rails', '~> 2.1'
 gem 'coffee-rails'
 gem 'uglifier'
 
