@@ -2,7 +2,7 @@ Forward
 -------
 
 Potionstore has languished for some time. Having a recent need for something of it's ilk 
-I have refreshed Potion Store to support rail5 and hope to continue it's development. 
+I have refreshed Potion Store to support rail 5.2 and hope to continue it's development.
 
 I may well hard fork it at some point but being rather fond of the name and branding it 
 will remain Potion Store for now.
