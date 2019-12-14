@@ -26,7 +26,7 @@ class Admin::ChartsController < ApplicationController
 
     g = new_chart(data, labels)
 
-    render :text => g.render
+    render plain: g.render
   end
 
   def revenue_history_weeks
@@ -56,7 +56,7 @@ class Admin::ChartsController < ApplicationController
     g = new_chart(data, labels)
     g.set_x_label_style(10, '#000000', 0, 2)
 
-    render :text => g.render
+    render plain: g.render
   end
 
   def revenue_history_months
@@ -83,7 +83,7 @@ class Admin::ChartsController < ApplicationController
     g = new_chart(data, labels)
     g.set_x_label_style(10, '#000000', 0, 2)
 
-    render :text => g.render
+    render plain: g.render
   end
 
   private

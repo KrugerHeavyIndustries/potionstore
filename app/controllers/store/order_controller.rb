@@ -124,7 +124,7 @@ class Store::OrderController < ApplicationController
   def purchase
     redirect_to :action => 'index' and return unless params[:order] && params[:items]
 
-    @order = Order.find_by_uuid(params[:order][:uuid])
+    @order = Order.find_by_uuid(order_params[:uuid])
 
     if @order
       if @order.status == 'C'
@@ -153,7 +153,7 @@ class Store::OrderController < ApplicationController
     @order.order_time = Time.now
     @order.status = 'S'
 
-    if not @order.save
+    unless @order.save
       flash[:error] = 'Please fill out all fields'
       if @order.cc_order?
         render :action => 'payment_cc' and return
@@ -252,7 +252,8 @@ class Store::OrderController < ApplicationController
       :cc_year, 
       :cc_code, 
       :licensee_name, 
-      :comment
+      :comment,
+      :uuid
     ]
   end
 

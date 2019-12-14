@@ -10,7 +10,7 @@ $(document).ready(function(){
 <div id="errors">
   <h2 style="margin-bottom:14px;color:red">Problems</h2>
   <ul>
-  <% @order.errors.each_full do |message| %>
+  <% @order.errors.full_messages.each do |message| %>
     <li><%= message %></li>
   <% end %>
   </ul>

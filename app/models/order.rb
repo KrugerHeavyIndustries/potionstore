@@ -1,8 +1,8 @@
 require 'uuidtools'
 
-class Order < ActiveRecord::Base
+class Order < ApplicationRecord
   has_many :line_items
-  belongs_to :coupon
+  belongs_to :coupon, optional: true
   before_create :generate_token
   
   attr_accessor :cc_code, :cc_month, :cc_year
@@ -12,20 +12,37 @@ class Order < ActiveRecord::Base
 
   validates :payment_type, :presence => true
 
-  def initialize(attributes = {}, form_items = [])
-    attributes = attributes.clone()
-    if attributes[:items]
-      form_items = attributes[:items]
-      attributes.delete(:items)
+  after_initialize do
+    self.order_time = Time.now unless self.order_time
+  end
+
+  before_save do
+    # Insert a dash for Japanese zipcodes if it doesn't have one
+    if self.country == 'JP' && self.zipcode != nil && self.zipcode.count('-') == 0 && self.zipcode.length > 3
+      self.zipcode.insert(3, '-')
     end
 
-    super(attributes)
+    # Take out optional strings
+    self.address2 = '' if self.address2 != nil && self.address2.strip == 'optional'
+    self.company = '' if self.company != nil && self.company.strip == 'optional'
+    self.comment = '' if self.comment != nil && self.comment.strip == 'optional'
 
-    if form_items.length > 0
-      self.add_form_items(form_items)
+    # Save updated relationships
+    for item in self.line_items
+      if !item.new_record? && item.changed?
+        item.save
+      end
     end
-    
-    self.order_time = Time.now if not self.order_time
+
+    if self.coupon != nil && !self.coupon.new_record? && self.coupon.changed?
+      self.coupon.save
+    end
+
+    # Add UID if it hasn't been already
+    self.uuid = generate_token unless self.uuid
+
+    # Always update the total before saving. Always!!!
+    self.total = self.calculated_total
   end
 
   def validate
@@ -63,7 +80,7 @@ class Order < ActiveRecord::Base
   end
 
   def calculated_total
-    return total_before_applying_coupons() - coupon_amount()
+    return total_before_applying_coupons - coupon_amount
   end
 
   def total_before_applying_coupons
@@ -92,7 +109,7 @@ class Order < ActiveRecord::Base
       end
     end
     if coupon && coupon.percentage != nil && coupon.product_code == 'all'
-      return total_before_applying_coupons() * (coupon.percentage / 100.0)
+      return total_before_applying_coupons * (coupon.percentage / 100.0)
     end
     return 0
   end
@@ -322,37 +339,6 @@ class Order < ActiveRecord::Base
     subscriber = ListSubscriber.new
     subscriber.email = self.email
     subscriber.save
-  end
-
-  def save
-    # Insert a dash for Japanese zipcodes if it doesn't have one
-    if self.country == 'JP' && self.zipcode != nil && self.zipcode.count('-') == 0 && self.zipcode.length > 3
-      self.zipcode.insert(3, '-')
-    end
-
-    # Take out optional strings
-    self.address2 = '' if self.address2 != nil && self.address2.strip == 'optional'
-    self.company = '' if self.company != nil && self.company.strip == 'optional'
-    self.comment = '' if self.comment != nil && self.comment.strip == 'optional'
-
-    # Save updated relationships
-    for item in self.line_items
-      if !item.new_record? && item.changed?
-        item.save()
-      end
-    end
-
-    if self.coupon != nil && !self.coupon.new_record? && self.coupon.changed?
-      self.coupon.save()
-    end
-
-    # Add UID if it hasn't been already
-    self.uuid = generate_token() unless self.uuid
-
-    # Always update the total before saving. Always!!!
-    self.total = self.calculated_total
-
-    super()
   end
 
   def finish_and_save

@@ -19,5 +19,5 @@ production:
 test:
   <<: *default
   database: potionstore_test
-  username: pstest
-  password: pstest
+  username: potionstore
+  password: potionstore

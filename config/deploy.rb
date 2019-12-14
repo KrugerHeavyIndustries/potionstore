@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock "3.8.0"
+lock "3.11.2"
 
 set :application, "potionstore"
 set :repo_url, "ssh://git@miskatonic.krugerheavyindustries.com:7999/www/potionstore.git"

@@ -1,2 +1,2 @@
-class ListSubscriber < ActiveRecord::Base
+class ListSubscriber < ApplicationRecord
 end
