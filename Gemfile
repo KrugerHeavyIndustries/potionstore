@@ -19,7 +19,7 @@ gem 'sassc-rails', '~> 2.1'
 gem 'coffee-rails'
 gem 'uglifier'
 
-gem 'open-flash-chart', :github => 'KrugerHeavyIndustries/open-flash-chart'
+gem 'open-flash-chart', git: 'https://github.com/KrugerHeavyIndustries/open-flash-chart.git'
 
 gem 'jquery-validation-rails'
 gem 'attribute_normalizer'

@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/KrugerHeavyIndustries/open-flash-chart.git
+  remote: https://github.com/KrugerHeavyIndustries/open-flash-chart.git
   revision: d17694b44159329ece0712c2c7511c65bc19d096
   specs:
     open-flash-chart (2.0.0)
@@ -133,7 +133,7 @@ GEM
     power_assert (1.2.0)
     puma (4.3.5)
       nio4r (~> 2.0)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.4.3)
@@ -209,7 +209,7 @@ GEM
       railties (>= 5.0)
     websocket-driver (0.7.2)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.4)
+    websocket-extensions (0.1.5)
     will_paginate (3.3.0)
     xml-simple (1.1.5)
 
