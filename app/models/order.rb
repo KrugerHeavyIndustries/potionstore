@@ -375,7 +375,7 @@ class Order < ApplicationRecord
       amount: (total.to_f * 100).to_i,
       currency: 'USD',
       description: "Kruger Heavy Industries Order #{self.id}",
-      ip_address: request.ip,
+      ip_address: request.remote_ip,
       card: {
         number: cc_number,
         expiry_month: cc_month,
